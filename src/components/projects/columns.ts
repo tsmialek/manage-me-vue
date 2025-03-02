@@ -1,4 +1,5 @@
 import type { ColumnDef } from '@tanstack/vue-table';
+import DropdownAction from '@/components/projects/data-table-dropdown.vue';
 import { h } from 'vue';
 
 import type { Project } from '@/components/projects/types';
@@ -16,18 +17,15 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: 'title',
     header: () => h('div', { class: 'text-right' }, 'Title'),
     cell: ({ row }) => {
-      return h(
-        'div',
-        { class: 'text-right font-medium' },
-        row.getValue('title')
-      );
+      const rawTitle = row.getValue('title') as string;
+      return h('div', { class: 'text-right font-medium' }, rawTitle);
     },
   },
   {
     accessorKey: 'description',
     header: () => h('div', { class: 'text-right' }, 'Description'),
     cell: ({ row }) => {
-      const rawDescription = row.getValue('description') as String;
+      const rawDescription = row.getValue('description') as string;
       const shortenedDescription = rawDescription
         .split(' ')
         .slice(0, 6)
@@ -38,6 +36,14 @@ export const columns: ColumnDef<Project>[] = [
         { class: 'text-right font-medium' },
         shortenedDescription
       );
+    },
+  },
+  {
+    id: 'actions',
+    enableHiding: false,
+    cell: ({ row }) => {
+      const project = row.original;
+      return h('div', { class: 'relative' }, h(DropdownAction, { project }));
     },
   },
 ];
