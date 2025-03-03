@@ -13,6 +13,8 @@ import {
 import { valueUpdater } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Moon, Sun } from 'lucide-vue-next';
 import {
   Table,
   TableBody,
@@ -51,13 +53,18 @@ const table = useVueTable({
 
 <template>
   <div>
-    <div class="flex item-center py-4">
+    <div class="flex item-center pb-4">
       <Input
         class="max-w-sm"
         placeholder="Filter title..."
         :model-value="table.getColumn('title')?.getFilterValue() as string"
         @update:model-value="table.getColumn('title')?.setFilterValue($event)"
       />
+      <Switch>
+        <template #thumb>
+          <Moon class="size-3" />
+        </template>
+      </Switch>
     </div>
     <div class="border rounded-md">
       <Table>
@@ -100,7 +107,7 @@ const table = useVueTable({
         </TableBody>
       </Table>
     </div>
-    <div class="flex items-center justify-end py-4 space-x-2">
+    <div class="flex items-center justify-end pt-4 space-x-2">
       <Button
         variant="outline"
         size="sm"
