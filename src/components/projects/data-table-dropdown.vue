@@ -8,16 +8,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-vue-next';
+import type { Project } from './types';
 
 defineProps<{
-  project: {
-    id: number;
-    title: string;
-  };
+  project: Project;
 }>();
 
 const emits = defineEmits<{
-  (e: 'deleteProject', id: number): void;
+  (e: 'delete-project', project: Project): void;
 }>();
 
 function copy(title: string) {
@@ -38,7 +36,7 @@ function copy(title: string) {
       <DropdownMenuItem @click="copy(project.title)">
         Copy project title
       </DropdownMenuItem>
-      <DropdownMenuItem @click="emits('deleteProject', project.id)">
+      <DropdownMenuItem @click="emits('delete-project', project)">
         Delete project
       </DropdownMenuItem>
     </DropdownMenuContent>

@@ -4,7 +4,9 @@ import { h } from 'vue';
 
 import type { Project } from '@/components/projects/types';
 
-export const columns: ColumnDef<Project>[] = [
+export const columns = (
+  emit: (event: string, payload: Project) => void
+): ColumnDef<Project>[] => [
   {
     accessorKey: 'id',
     header: () => h('div', { class: 'text-right' }, 'Id'),
@@ -43,7 +45,15 @@ export const columns: ColumnDef<Project>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const project = row.original;
-      return h('div', { class: 'relative' }, h(DropdownAction, { project }));
+      return h(
+        'div',
+        { class: 'relative' },
+        h(DropdownAction, {
+          project,
+          onDeleteProject: (project: Project) =>
+            emit('delete-project', project),
+        })
+      );
     },
   },
 ];
