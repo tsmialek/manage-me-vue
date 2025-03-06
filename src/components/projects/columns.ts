@@ -31,7 +31,8 @@ export const columns = (
       const shortenedDescription = rawDescription
         .split(' ')
         .slice(0, 6)
-        .join(' ');
+        .join(' ')
+        .concat(' ...');
 
       return h(
         'div',
