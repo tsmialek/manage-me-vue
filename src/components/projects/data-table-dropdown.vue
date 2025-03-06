@@ -11,8 +11,13 @@ import { MoreHorizontal } from 'lucide-vue-next';
 
 defineProps<{
   project: {
+    id: number;
     title: string;
   };
+}>();
+
+const emits = defineEmits<{
+  (e: 'deleteProject', id: number): void;
 }>();
 
 function copy(title: string) {
@@ -32,6 +37,9 @@ function copy(title: string) {
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
       <DropdownMenuItem @click="copy(project.title)">
         Copy project title
+      </DropdownMenuItem>
+      <DropdownMenuItem @click="emits('deleteProject', project.id)">
+        Delete project
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
