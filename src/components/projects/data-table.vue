@@ -10,11 +10,11 @@ import {
   getFilteredRowModel,
 } from '@tanstack/vue-table';
 
+import Modal from '@/components/modal.vue';
 import { valueUpdater } from '@/lib/utils';
+import { FilePlus2 } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
-import { Moon, Sun } from 'lucide-vue-next';
 import {
   Table,
   TableBody,
@@ -49,22 +49,23 @@ const table = useVueTable({
     },
   },
 });
+
+const showCreateProjectModal = ref(false);
 </script>
 
 <template>
   <div>
-    <div class="flex item-center pb-4">
+    <div class="flex item-center justify-between pb-4">
       <Input
         class="max-w-sm"
         placeholder="Filter title..."
         :model-value="table.getColumn('title')?.getFilterValue() as string"
         @update:model-value="table.getColumn('title')?.setFilterValue($event)"
       />
-      <Switch>
-        <template #thumb>
-          <Moon class="size-3" />
-        </template>
-      </Switch>
+      <Button @click="showCreateProjectModal = true">
+        <FilePlus2 />
+        Add project
+      </Button>
     </div>
     <div class="border rounded-md">
       <Table>
@@ -125,5 +126,11 @@ const table = useVueTable({
         Next
       </Button>
     </div>
+    <Modal
+      :show="showCreateProjectModal"
+      @close="showCreateProjectModal = false"
+    >
+      <p>create-project form placeholder</p>
+    </Modal>
   </div>
 </template>
