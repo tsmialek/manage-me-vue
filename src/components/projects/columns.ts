@@ -2,17 +2,17 @@ import type { ColumnDef } from '@tanstack/vue-table';
 import DropdownAction from '@/components/projects/data-table-dropdown.vue';
 import { h } from 'vue';
 
-import type { Project } from '@/components/projects/types';
+import type { ProjectRecord } from '@/types';
 
 export const columns = (
-  emit: (event: string, payload: Project) => void
-): ColumnDef<Project>[] => [
+  emit: (event: string, payload: ProjectRecord) => void
+): ColumnDef<ProjectRecord>[] => [
   {
     accessorKey: 'id',
-    header: () => h('div', { class: 'text-right' }, 'Id'),
+    header: () => h('div', { class: 'text-left' }, 'Id'),
     cell: ({ row }) => {
-      const projectId = Number.parseInt(row.getValue('id'));
-      return h('div', { class: 'text-right font-medium' }, projectId);
+      const rawProjectId = row.getValue('id') as string;
+      return h('div', { class: 'text-left font-medium' }, rawProjectId);
     },
   },
   {
@@ -42,6 +42,15 @@ export const columns = (
     },
   },
   {
+    accessorKey: 'user',
+    header: () => h('div', { class: 'text-right' }, 'User'),
+    cell: ({ row }) => {
+      const user =
+        row.original.expand?.user.map(user => user.name).join(', ') ?? '---';
+      return h('div', { class: 'text-right' }, user);
+    },
+  },
+  {
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
@@ -51,7 +60,7 @@ export const columns = (
         { class: 'relative' },
         h(DropdownAction, {
           project,
-          onDeleteProject: (project: Project) =>
+          onDeleteProject: (project: ProjectRecord) =>
             emit('delete-project', project),
         })
       );

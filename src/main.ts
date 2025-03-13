@@ -1,17 +1,10 @@
 import { createApp } from 'vue';
 import './index.css';
 import App from './App.vue';
+import { createPinia } from 'pinia';
 
-import type { ProjectRepository } from '@/repositories/ProjectRepository';
-import { JsonProjectRepository } from '@/repositories/JsonProjectRepository';
-import { ApiProjectRepository } from '@/repositories/ApiProjectRepository';
-
-const useJsonData = true;
-const projectRepository: ProjectRepository = useJsonData
-  ? new JsonProjectRepository('/src/assets/projects.json')
-  : new ApiProjectRepository('');
+const pinia = createPinia();
 
 const app = createApp(App);
-
-app.provide('project-repository', projectRepository);
+app.use(pinia);
 app.mount('#app');

@@ -1,20 +1,20 @@
 import type { User } from '@/types';
 
-export interface Project {
-  id: string;
+export type Project = {
   title: string;
   description: string;
-  user?: string;
-}
+  user: string[];
+};
 
-export interface ProjectRecord {
+export type ProjectRecord = Project & {
+  id: string;
+  expand: ProjectRelations | null;
+  created: string;
+  updated: string;
   collectionId: string;
   collectionName: string;
-  id: string;
-  title: string;
-  expand?: { user: User[] };
-  description: string;
-  created: Date;
-  updated: Date;
-  user: string[];
-}
+};
+
+export type ProjectRelations = {
+  user: User[];
+};

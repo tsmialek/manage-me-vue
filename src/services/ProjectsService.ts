@@ -26,9 +26,11 @@ class ProjectsService {
   subscribeToProjects(
     callback: (action: string, record: ProjectRecord) => void
   ) {
-    this.pb.collection('projects').subscribe('*', e => {
-      callback(e.action, e.record as ProjectRecord);
-    });
+    this.pb
+      .collection('projects')
+      .subscribe('*', (e: { action: string; record: ProjectRecord }) => {
+        callback(e.action, e.record as ProjectRecord);
+      });
   }
 
   async deleteProject(id: string) {

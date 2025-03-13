@@ -8,14 +8,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-vue-next';
-import type { Project } from './types';
+import type { ProjectRecord } from '@/types';
 
 defineProps<{
-  project: Project;
+  project: ProjectRecord;
 }>();
 
 const emits = defineEmits<{
-  (e: 'delete-project', project: Project): void;
+  (e: 'delete-project', project: ProjectRecord): void;
 }>();
 
 function copy(title: string) {

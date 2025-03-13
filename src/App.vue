@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { inject, onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 
 import DataTable from '@/components/projects/data-table.vue';
 
 import { columns } from '@/components/projects/columns';
-import type { Project } from '@/components/projects/types';
-import type { ProjectRepository } from './repositories/ProjectRepository';
+import { useProjectStore } from '@/store/ProjectStore';
+import ProjectsService from '@/services/ProjectsService';
+import type { ProjectRecord } from '@/types';
 
-const projectRepository = inject<ProjectRepository>('project-repository');
-const projects = ref<Project[]>([]);
-// TODO:
-const error = ref<string | null>(null);
-const loading = ref(false);
+const projectStore = useProjectStore();
 
-function handleDropdownAction(action: string, projectPayload: Project): void {
+async function handleDropdownAction(
+  action: string,
+  projectPayload: ProjectRecord
+): Promise<void> {
   switch (action) {
     case 'delete-project':
       console.log(`Project with id: ${projectPayload.id} deleted`);
-      projects.value = projects.value.filter(p => p.id !== projectPayload.id);
+      await projectStore.deleteProject(projectPayload.id);
       break;
     default:
       console.log(`Unknown dropdown action: ${action}`);
@@ -25,26 +25,19 @@ function handleDropdownAction(action: string, projectPayload: Project): void {
 }
 
 onMounted(async () => {
-  if (!projectRepository) {
-    error.value = 'Project repository not available';
-    return;
-  }
-
-  loading.value = true;
-  try {
-    projects.value = await projectRepository.getProjects();
-  } catch (err) {
-    console.log(err);
-    error.value = 'Failed to load projects';
-  } finally {
-    loading.value = false;
-  }
+  await projectStore.fetchProjects();
+  ProjectsService.subscribeToProjects(projectStore.handleRealTimeUpdates);
+  console.log(projectStore.projects);
 });
 </script>
 
 <template>
   <div class="container py-10 mx-auto">
-    <DataTable :columns="columns(handleDropdownAction)" :data="projects" />
+    <DataTable
+      :columns="columns(handleDropdownAction)"
+      :data="projectStore.projects"
+    />
+    <p v-if="projectStore.error">{{ projectStore.error }}</p>
   </div>
 </template>
 
