@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 
 import DataTable from '@/components/projects/data-table.vue';
+import { Toaster } from '@/components/ui/toast';
 
 import { columns } from '@/components/projects/columns';
 import { useProjectStore } from '@/store/ProjectStore';
@@ -39,6 +40,7 @@ onMounted(async () => {
     />
     <p v-if="projectStore.error">{{ projectStore.error }}</p>
   </div>
+  <Toaster />
 </template>
 
 <style scoped></style>

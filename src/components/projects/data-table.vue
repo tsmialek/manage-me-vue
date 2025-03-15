@@ -10,6 +10,7 @@ import {
   getFilteredRowModel,
 } from '@tanstack/vue-table';
 
+import addProjectForm from './add-project-form.vue';
 import Modal from '@/components/modal.vue';
 import { valueUpdater } from '@/lib/utils';
 import { FilePlus2 } from 'lucide-vue-next';
@@ -129,8 +130,8 @@ const showCreateProjectModal = ref(false);
     <Modal
       :show="showCreateProjectModal"
       @close="showCreateProjectModal = false"
-    >
-      <p>create-project form placeholder</p>
-    </Modal>
+      title="Create project"
+      :component="addProjectForm"
+    ></Modal>
   </div>
 </template>
