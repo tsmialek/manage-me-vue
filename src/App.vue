@@ -5,7 +5,7 @@ import DataTable from '@/components/projects/data-table.vue';
 
 import { columns } from '@/components/projects/columns';
 import { useProjectStore } from '@/store/ProjectStore';
-import ProjectsService from '@/services/ProjectsService';
+import ProjectService from '@/services/ProjectService';
 import type { ProjectRecord } from '@/types';
 
 const projectStore = useProjectStore();
@@ -26,7 +26,7 @@ async function handleDropdownAction(
 
 onMounted(async () => {
   await projectStore.fetchProjects();
-  ProjectsService.subscribeToProjects(projectStore.handleRealTimeUpdates);
+  ProjectService.subscribe(projectStore.handleRealTimeUpdates);
   console.log(projectStore.projects);
 });
 </script>

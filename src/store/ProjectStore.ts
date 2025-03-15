@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import ProjectService from '@/services/ProjectsService';
+import ProjectService from '@/services/ProjectService';
 import type { ProjectRecord } from '@/types';
 
 export const useProjectStore = defineStore('projects', () => {
@@ -12,7 +12,7 @@ export const useProjectStore = defineStore('projects', () => {
   const fetchProjects = async () => {
     try {
       loading.value = true;
-      projects.value = await ProjectService.getProjects();
+      projects.value = await ProjectService.getAll(1, 50, { expand: 'user' });
     } catch (e: any) {
       error.value = e.message;
     } finally {
@@ -23,7 +23,7 @@ export const useProjectStore = defineStore('projects', () => {
   const deleteProject = async (id: string) => {
     try {
       loading.value = true;
-      return await ProjectService.deleteProject(id);
+      return await ProjectService.delete(id);
     } catch (e: any) {
       error.value = e.message;
     } finally {

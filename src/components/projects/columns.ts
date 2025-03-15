@@ -45,9 +45,8 @@ export const columns = (
     accessorKey: 'user',
     header: () => h('div', { class: 'text-right' }, 'User'),
     cell: ({ row }) => {
-      const user =
-        row.original.expand?.user.map(user => user.name).join(', ') ?? '---';
-      return h('div', { class: 'text-right' }, user);
+      const users = row.original.expand?.user.map(u => u.name).join(', ');
+      return h('div', { class: 'text-right' }, users);
     },
   },
   {
