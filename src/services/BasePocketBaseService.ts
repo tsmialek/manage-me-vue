@@ -16,7 +16,7 @@ export class BasePocketBaseService<Base, Record> {
   async getAll(
     page: number = 1,
     perPage: number = 50,
-    options: RecordListOptions = {}
+    options?: RecordListOptions
   ) {
     try {
       const dbRecords = await this.pb
@@ -30,7 +30,7 @@ export class BasePocketBaseService<Base, Record> {
     }
   }
 
-  async getOne(filter: string, options: RecordListOptions) {
+  async getOne(filter: string, options?: RecordListOptions) {
     try {
       const dbRecord = await this.pb
         .collection(this.collectionName)
@@ -55,7 +55,7 @@ export class BasePocketBaseService<Base, Record> {
     }
   }
 
-  async create(data: Base, options: RecordOptions) {
+  async create(data: Base, options?: RecordOptions) {
     try {
       const createResult = await this.pb
         .collection('projects')
@@ -67,7 +67,7 @@ export class BasePocketBaseService<Base, Record> {
     }
   }
 
-  async update(id: string, options: RecordOptions) {
+  async update(id: string, options?: RecordOptions) {
     try {
       const updateResult = await this.pb
         .collection(this.collectionName)

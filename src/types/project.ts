@@ -1,4 +1,4 @@
-import type { User } from '@/types';
+import type { UserRecord } from '@/types';
 
 export type ProjectBase = {
   title: string;
@@ -16,5 +16,5 @@ export type ProjectRecord = ProjectBase & {
 };
 
 export type ProjectRelations = {
-  user: User[];
+  user: UserRecord[];
 };

@@ -1,3 +1,4 @@
+// TODO: create abstract error factory
 export class BadRequest extends Error {
   constructor(message: string = 'There was something wrong with your request') {
     super(message);

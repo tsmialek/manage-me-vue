@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 
 import DataTable from '@/components/projects/data-table.vue';
 import { Toaster } from '@/components/ui/toast';
 
 import { columns } from '@/components/projects/columns';
 import { useProjectStore } from '@/store/ProjectStore';
-import ProjectService from '@/services/ProjectService';
 import type { ProjectRecord } from '@/types';
 
 const projectStore = useProjectStore();
@@ -18,7 +17,7 @@ async function handleDropdownAction(
   switch (action) {
     case 'delete-project':
       console.log(`Project with id: ${projectPayload.id} deleted`);
-      await projectStore.deleteProject(projectPayload.id);
+      await projectStore.deleteProject(projectPayload);
       break;
     default:
       console.log(`Unknown dropdown action: ${action}`);
@@ -27,8 +26,12 @@ async function handleDropdownAction(
 
 onMounted(async () => {
   await projectStore.fetchProjects();
-  ProjectService.subscribe(projectStore.handleRealTimeUpdates);
+  projectStore.initializeRealtimeUpdates();
   console.log(projectStore.projects);
+});
+
+onUnmounted(async () => {
+  projectStore.unsubscribeFromRealtimeUpdates();
 });
 </script>
 
@@ -38,7 +41,6 @@ onMounted(async () => {
       :columns="columns(handleDropdownAction)"
       :data="projectStore.projects"
     />
-    <p v-if="projectStore.error">{{ projectStore.error }}</p>
   </div>
   <Toaster />
 </template>
