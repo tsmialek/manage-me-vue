@@ -27,14 +27,13 @@ async function handleDropdownAction(
 onMounted(async () => {
   await projectStore.fetchProjects();
   projectStore.initializeRealtimeUpdates();
-  console.log(projectStore.projects);
 });
 
 onUnmounted(async () => {
   projectStore.unsubscribeFromRealtimeUpdates();
 });
 </script>
-
+<!-- TODO: create global appStore to manage modals and loading state -->
 <template>
   <div class="container py-10 mx-auto">
     <DataTable

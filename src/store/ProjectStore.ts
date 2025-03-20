@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia';
-import { h, ref } from 'vue';
+import { ref } from 'vue';
 
 import ProjectService from '@/services/ProjectService';
 import type { ProjectRecord, ProjectBase } from '@/types';
 import { useToast } from '@/components/ui/toast/use-toast';
+import { executeServiceOperation } from '@/lib/utils';
 
 export const useProjectStore = defineStore('projects', () => {
   const projects = ref<ProjectRecord[]>([]);
@@ -12,28 +13,40 @@ export const useProjectStore = defineStore('projects', () => {
 
   const { toast } = useToast();
 
-  const executeServiceOperation = async <T>(
-    operation: () => Promise<T | undefined>
-  ) => {
-    try {
-      loading.value = true;
-      return await operation();
-    } catch (e: any) {
-      error.value = e.message;
-      toast({
-        title: 'Error',
-        variant: 'destructive',
-        description: error.value ?? 'Something went wrong :(',
-      });
-    } finally {
-      loading.value = false;
-    }
+  // const executeServiceOperation = async <T>(
+  //   operation: () => Promise<T | undefined>
+  // ) => {
+  //   try {
+  //     loading.value = true;
+  //     return await operation();
+  //   } catch (e: any) {
+  //     error.value = e.message;
+  //     toast({
+  //       title: 'Error',
+  //       variant: 'destructive',
+  //       description: error.value ?? 'Something went wrong :(',
+  //     });
+  //   } finally {
+  //     loading.value = false;
+  //   }
+  // };
+  const showErrorToast = () => {
+    toast({
+      title: 'Error',
+      variant: 'destructive',
+      description: error.value ?? 'Something went wrong :(',
+    });
   };
 
   const fetchProjects = async () => {
-    const result = await executeServiceOperation(async () => {
-      return await ProjectService.getAll(1, 50, { expand: 'user' });
-    });
+    const result = await executeServiceOperation(
+      async () => {
+        return await ProjectService.getAll(1, 50, { expand: 'user' });
+      },
+      loading,
+      error,
+      showErrorToast
+    );
     if (result) projects.value = result;
   };
 
