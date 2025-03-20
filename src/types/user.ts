@@ -4,13 +4,15 @@ export type BaseUser = {
   avatar?: string;
 };
 
-export type UserRecord = BaseUser & {
-  id: string;
-  emailVisibility: boolean;
-  verified: boolean;
-  created: Date;
-  updated: Date;
-};
+export type UserRecord =
+  | (BaseUser & {
+      id: string;
+      emailVisibility: boolean;
+      verified: boolean;
+      created: Date;
+      updated: Date;
+    })
+  | null;
 
 export type NewUser = BaseUser & {
   password: string;
