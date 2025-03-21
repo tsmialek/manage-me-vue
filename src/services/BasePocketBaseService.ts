@@ -5,8 +5,8 @@ import PocketBase, {
 } from 'pocketbase';
 
 export class BasePocketBaseService<Base, Record> {
-  private pb: PocketBase;
-  private readonly collectionName: string;
+  protected pb: PocketBase;
+  protected readonly collectionName: string;
 
   constructor(collection: string) {
     this.pb = new PocketBase(import.meta.env.VITE_POCKETBASE_URL);
