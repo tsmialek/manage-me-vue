@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import ProjectService from '@/services/ProjectService';
 import type { ProjectRecord, ProjectBase } from '@/types';
 import { useToast } from '@/components/ui/toast/use-toast';
-import { executeServiceOperation, showErrorToast } from '@/lib/utils';
+import { performAsyncOperation } from '@/lib/utils';
 
 export const useProjectStore = defineStore('projects', () => {
   const projects = ref<ProjectRecord[]>([]);
@@ -14,7 +14,7 @@ export const useProjectStore = defineStore('projects', () => {
   const { toast } = useToast();
 
   const fetchProjects = async () => {
-    const result = await executeServiceOperation(
+    const result = await performAsyncOperation(
       async () => {
         return await ProjectService.getAll(1, 50, { expand: 'user' });
       },
@@ -25,7 +25,7 @@ export const useProjectStore = defineStore('projects', () => {
   };
 
   const addProject = async (newProject: ProjectBase) => {
-    const result = await executeServiceOperation(
+    const result = await performAsyncOperation(
       async () => {
         return await ProjectService.create(newProject);
       },
@@ -40,7 +40,7 @@ export const useProjectStore = defineStore('projects', () => {
   };
 
   const deleteProject = async (project: ProjectRecord) => {
-    const result = await executeServiceOperation(
+    const result = await performAsyncOperation(
       async () => {
         return await ProjectService.delete(project.id);
       },

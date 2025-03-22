@@ -28,7 +28,7 @@ export function valueUpdater<T extends Updater<any>>(
       : updaterOrValue;
 }
 
-export const executeServiceOperation = async <T>(
+export const performAsyncOperation = async <T>(
   operation: () => Promise<T | undefined>,
   loading: Ref<Boolean>,
   error: Ref<any>

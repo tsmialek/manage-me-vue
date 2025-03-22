@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
 import type { NewUser, UserRecord } from '@/types';
-import { executeServiceOperation } from '@/lib/utils';
+import { performAsyncOperation } from '@/lib/utils';
 import UserService from '@/services/UserService';
 import router from '@/router';
 
@@ -14,7 +14,7 @@ export const useUserStore = defineStore('users', () => {
   const isAuthenticated = computed(() => !!currentUser.value);
 
   const fetchCurrentUser = async () => {
-    const fetchResponse = await executeServiceOperation(
+    const fetchResponse = await performAsyncOperation(
       async () => {
         return await UserService.getCurrentUser();
       },
@@ -25,7 +25,7 @@ export const useUserStore = defineStore('users', () => {
   };
 
   const logIn = async (newUser: NewUser) => {
-    const loginResponse = await executeServiceOperation(
+    const loginResponse = await performAsyncOperation(
       async () => await UserService.logIn(newUser),
       loading,
       error
@@ -38,7 +38,7 @@ export const useUserStore = defineStore('users', () => {
   };
 
   const logOut = async () => {
-    await executeServiceOperation(
+    await performAsyncOperation(
       async () => {
         await UserService.logOut();
         currentUser.value = null;
