@@ -6,8 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/toast';
 
 import { columns } from '@/components/projects/columns';
-import { useProjectStore } from '@/store/ProjectStore';
-import { useUserStore } from '@/store/UserStore';
+import { useProjectStore, useUserStore } from '@/store';
 import type { ProjectRecord } from '@/types';
 
 const projectStore = useProjectStore();

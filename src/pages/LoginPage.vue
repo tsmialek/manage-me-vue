@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/toast';
 import { AutoForm } from '@/components/ui/auto-form';
 import * as z from 'zod';
 
-import { useUserStore } from '@/store/UserStore';
+import { useUserStore } from '@/store';
 import type { NewUser } from '@/types';
 
 const userStore = useUserStore();
