@@ -15,7 +15,8 @@ const schema = z.object({
 });
 
 async function onSubmit(credentials: NewUser) {
-  userStore.logIn(credentials);
+  // userStore.logIn(credentials);
+  userStore.logIn({ email: 'tomek@manage-me.com', password: 'tomeksmialek' });
 }
 </script>
 
@@ -32,7 +33,7 @@ async function onSubmit(credentials: NewUser) {
     >
       <Button type="submit">Log in</Button>
     </AutoForm>
+    <Toaster />
   </div>
-  <Toaster />
 </template>
 <style scoped></style>

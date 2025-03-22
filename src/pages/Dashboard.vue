@@ -37,17 +37,19 @@ onUnmounted(async () => {
 </script>
 <!-- TODO: create global appStore to manage modals and loading state -->
 <template>
-  <div>
-    <p>Logged in as: {{ userStore.currentUser?.name }}</p>
-    <Button @click="userStore.logOut()">Logout</Button>
+  <div class="">
+    <div>
+      <p>Logged in as: {{ userStore.currentUser?.name }}</p>
+      <Button @click="userStore.logOut()">Logout</Button>
+    </div>
+    <div class="container py-10 mx-auto">
+      <DataTable
+        :columns="columns(handleDropdownAction)"
+        :data="projectStore.projects"
+      />
+    </div>
+    <Toaster />
   </div>
-  <div class="container py-10 mx-auto">
-    <DataTable
-      :columns="columns(handleDropdownAction)"
-      :data="projectStore.projects"
-    />
-  </div>
-  <Toaster />
 </template>
 
 <style scoped></style>
