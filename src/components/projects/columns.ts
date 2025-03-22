@@ -42,10 +42,10 @@ export const columns = (
     },
   },
   {
-    accessorKey: 'user',
-    header: () => h('div', { class: 'text-right' }, 'User'),
+    accessorKey: 'owner',
+    header: () => h('div', { class: 'text-right' }, 'Owner'),
     cell: ({ row }) => {
-      const users = row.original.expand?.user.map(u => u.name).join(', ');
+      const users = row.original.expand?.user.map(u => u?.name).join(', ');
       return h('div', { class: 'text-right' }, users);
     },
   },
