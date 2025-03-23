@@ -24,7 +24,7 @@ function copy(id: string) {
 
 <template>
   <DropdownMenu>
-    <DropdownMenuTrigger as-child>
+    <DropdownMenuTrigger as-child @click.stop>
       <Button variant="ghost" class="w-8 h-8 p-0">
         <span class="sr-only">Open menu</span>
         <MoreHorizontal class="w-4 h-4" />

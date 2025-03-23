@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="TData, TValue">
 import { ref } from 'vue';
+import router from '@/router';
 
 import type { ColumnDef, ColumnFiltersState } from '@tanstack/vue-table';
 import {
@@ -24,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useActiveProjectStore } from '@/store';
 
 const props = defineProps<{
   columns: ColumnDef<TData, TValue>[];
@@ -51,7 +53,14 @@ const table = useVueTable({
   },
 });
 
+const activeProjectStore = useActiveProjectStore();
 const showCreateProjectModal = ref(false);
+
+const handleProjectSelection = async (projectId: string) => {
+  activeProjectStore.setActiveProject(projectId);
+  console.log(projectId);
+  router.push(`/project/${projectId}`);
+};
 </script>
 
 <template>
@@ -90,6 +99,7 @@ const showCreateProjectModal = ref(false);
               v-for="row in table.getRowModel().rows"
               :key="row.id"
               :data-state="row.getIsSelected() ? 'selected' : undefined"
+              @click="handleProjectSelection(row.getValue('id'))"
             >
               <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
                 <FlexRender

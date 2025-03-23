@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useLocalStorage } from '@vueuse/core';
 import { ref } from 'vue';
 
 import type { ProjectRecord } from '@/types';
@@ -7,21 +8,22 @@ import ProjectService from '@/services/ProjectService';
 
 export const useActiveProjectStore = defineStore('active-project', () => {
   const activeProject = ref<ProjectRecord | null>(null);
-  const activeProjectId = ref('');
+  const activeProjectId = useLocalStorage('active-project-id', '');
   const loading = ref(false);
   const error = ref(null);
 
   const fetchActiveProject = async () => {
     if (!activeProjectId.value) return;
-    performAsyncOperation(
+    const response = await performAsyncOperation(
       async () => {
-        return await ProjectService.getOne(`id="${activeProjectId.value}"`, {
+        return await ProjectService.getOne(activeProjectId.value, {
           expand: 'user',
         });
       },
       loading,
       error
     );
+    if (response) activeProject.value = response;
   };
 
   const setActiveProject = async (projectId: string) => {
