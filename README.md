@@ -1,5 +1,13 @@
-# Vue 3 + TypeScript + Vite
+# manage-me
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+ToDo:
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+- [ ] Edit projects
+- Implement stories functionality
+  - Stories CRUD
+    - [ ] implement stories service
+    - [ ] implement stories store
+  - Display stories in ProjectPage
+    - [ ] allow to change story status (context menu or drag and drop)
+    - [ ] allow to change story priority (context menu)
+    - [ ] OPTIONAL: allow to filter stories by priority
