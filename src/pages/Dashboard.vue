@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue';
+import { computed, onMounted, onUnmounted } from 'vue';
+import { useColorMode } from '@vueuse/core';
 
 import DataTable from '@/components/projects/data-table.vue';
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/toast';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 import { columns } from '@/components/projects/columns';
 import { useProjectStore, useUserStore } from '@/store';
@@ -11,20 +14,24 @@ import type { ProjectRecord } from '@/types';
 
 const projectStore = useProjectStore();
 const userStore = useUserStore();
+const mode = useColorMode({ disableTransition: false });
+const isDark = computed(() => mode.value === 'dark');
 
 async function handleDropdownAction(
   action: string,
   projectPayload: ProjectRecord
 ): Promise<void> {
   switch (action) {
-    case 'delete-project':
-      console.log(`Project with id: ${projectPayload.id} deleted`);
-      await projectStore.deleteProject(projectPayload);
-      break;
     default:
-      console.log(`Unknown dropdown action: ${action}`);
+      console.log(
+        `Unknown dropdown action: ${action}, Project : ${projectPayload}`
+      );
   }
 }
+
+const toggleTheme = () => {
+  mode.value = isDark.value ? 'light' : 'dark';
+};
 
 onMounted(async () => {
   await projectStore.fetchProjects();
@@ -41,6 +48,12 @@ onUnmounted(async () => {
     <div>
       <p>Logged in as: {{ userStore.currentUser?.name }}</p>
       <Button @click="userStore.logOut()">Logout</Button>
+      <Label for="theme">Choose theme</Label>
+      <Switch
+        :model-value="isDark"
+        @update:model-value="toggleTheme"
+        id="theme"
+      ></Switch>
     </div>
     <div class="container py-10 mx-auto">
       <DataTable
