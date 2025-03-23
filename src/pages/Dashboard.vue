@@ -17,12 +17,10 @@ async function handleDropdownAction(
   projectPayload: ProjectRecord
 ): Promise<void> {
   switch (action) {
-    case 'delete-project':
-      console.log(`Project with id: ${projectPayload.id} deleted`);
-      await projectStore.deleteProject(projectPayload);
-      break;
     default:
-      console.log(`Unknown dropdown action: ${action}`);
+      console.log(
+        `Unknown dropdown action: ${action}, Project : ${projectPayload}`
+      );
   }
 }
 

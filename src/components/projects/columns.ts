@@ -59,8 +59,6 @@ export const columns = (
         { class: 'relative' },
         h(DropdownAction, {
           project,
-          onDeleteProject: (project: ProjectRecord) =>
-            emit('delete-project', project),
         })
       );
     },

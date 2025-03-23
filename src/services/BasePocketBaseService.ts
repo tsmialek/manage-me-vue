@@ -30,11 +30,11 @@ export class BasePocketBaseService<Base, Record> {
     }
   }
 
-  async getOne(filter: string, options?: RecordListOptions) {
+  async getOne(id: string, options?: RecordListOptions) {
     try {
       const dbRecord = await this.pb
         .collection(this.collectionName)
-        .getFirstListItem<Record>(filter, options);
+        .getOne<Record>(id, options);
 
       return dbRecord;
     } catch (error: any) {
@@ -79,10 +79,13 @@ export class BasePocketBaseService<Base, Record> {
     }
   }
 
-  subscribe(callback: (action: string, record: Record) => void) {
+  subscribe(
+    actions: string,
+    callback: (action: string, record: Record) => void
+  ) {
     this.pb
       .collection(this.collectionName)
-      .subscribe('*', (e: { action: string; record: Record }) => {
+      .subscribe(actions, (e: { action: string; record: Record }) => {
         callback(e.action, e.record);
       });
   }

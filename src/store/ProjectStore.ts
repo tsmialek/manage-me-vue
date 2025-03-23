@@ -24,6 +24,22 @@ export const useProjectStore = defineStore('projects', () => {
     if (result) projects.value = result;
   };
 
+  const getProject = async (
+    projectId: string
+  ): Promise<ProjectRecord | null> => {
+    const result = await performAsyncOperation(
+      async () => {
+        return await ProjectService.getOne(projectId, {
+          expand: 'user',
+        });
+      },
+      loading,
+      error
+    );
+
+    return result ?? null;
+  };
+
   const addProject = async (newProject: ProjectBase) => {
     const result = await performAsyncOperation(
       async () => {
@@ -60,8 +76,8 @@ export const useProjectStore = defineStore('projects', () => {
   ) => {
     switch (action) {
       case 'create':
-        // TODO: expand record with user info
-        projects.value = [...projects.value, record];
+        const project = await getProject(record.id);
+        if (project) projects.value = [...projects.value, project];
         break;
       case 'update':
         const index = projects.value.findIndex(p => p.id === record.id);
@@ -78,7 +94,7 @@ export const useProjectStore = defineStore('projects', () => {
   };
 
   const initializeRealtimeUpdates = () => {
-    ProjectService.subscribe(handleRealTimeUpdates);
+    ProjectService.subscribe('*', handleRealTimeUpdates);
   };
 
   const unsubscribeFromRealtimeUpdates = () => {
