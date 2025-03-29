@@ -36,6 +36,9 @@ function copy(id: string) {
         Copy project id
       </DropdownMenuItem>
       <DropdownMenuItem @click="projectStore.deleteProject(project)">
+        Update project
+      </DropdownMenuItem>
+      <DropdownMenuItem @click="projectStore.deleteProject(project)">
         Delete project
       </DropdownMenuItem>
     </DropdownMenuContent>

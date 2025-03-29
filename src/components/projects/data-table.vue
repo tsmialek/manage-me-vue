@@ -11,8 +11,7 @@ import {
   getFilteredRowModel,
 } from '@tanstack/vue-table';
 
-import addProjectForm from './add-project-form.vue';
-import Modal from '@/components/modal.vue';
+import AddProjectForm from './add-project-form.vue';
 import { valueUpdater } from '@/lib/utils';
 import { FilePlus2 } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
@@ -25,7 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useActiveProjectStore } from '@/store';
+import { useActiveProjectStore, useAppStore } from '@/store';
 
 const props = defineProps<{
   columns: ColumnDef<TData, TValue>[];
@@ -54,12 +53,16 @@ const table = useVueTable({
 });
 
 const activeProjectStore = useActiveProjectStore();
-const showCreateProjectModal = ref(false);
+const appStore = useAppStore();
 
 const handleProjectSelection = async (projectId: string) => {
   activeProjectStore.setActiveProject(projectId);
   console.log(projectId);
   router.push(`/project/${projectId}`);
+};
+
+const showCreateProjectModal = () => {
+  appStore.openModal('create-project', AddProjectForm, 'Create Project');
 };
 </script>
 
@@ -72,7 +75,7 @@ const handleProjectSelection = async (projectId: string) => {
         :model-value="table.getColumn('title')?.getFilterValue() as string"
         @update:model-value="table.getColumn('title')?.setFilterValue($event)"
       />
-      <Button @click="showCreateProjectModal = true">
+      <Button @click="showCreateProjectModal">
         <FilePlus2 />
         Add project
       </Button>
@@ -137,11 +140,5 @@ const handleProjectSelection = async (projectId: string) => {
         Next
       </Button>
     </div>
-    <Modal
-      :show="showCreateProjectModal"
-      @close="showCreateProjectModal = false"
-      title="Create project"
-      :component="addProjectForm"
-    ></Modal>
   </div>
 </template>

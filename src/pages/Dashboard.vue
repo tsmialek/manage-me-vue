@@ -14,6 +14,7 @@ import type { ProjectRecord } from '@/types';
 
 const projectStore = useProjectStore();
 const userStore = useUserStore();
+
 const mode = useColorMode({ disableTransition: false });
 const isDark = computed(() => mode.value === 'dark');
 
