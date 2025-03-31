@@ -3,26 +3,33 @@ import router from '@/router';
 import { useRoute } from 'vue-router';
 import { watch } from 'vue';
 
+import { AddStoryForm } from '@/components/stories';
 import { Button } from '@/components/ui/button';
+import { Toaster } from '@/components/ui/toast';
 import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
+import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
-import { useActiveProjectStore } from '@/store';
+import { useActiveProjectStore, useAppStore, useStoryStore } from '@/store';
 
 const activeProjectStore = useActiveProjectStore();
+const storyStore = useStoryStore();
+const appStore = useAppStore();
 const route = useRoute();
 
 const handleBackToDashboard = async () => {
+  activeProjectStore.clearActiveProject();
   router.push({ name: 'Dashboard' });
-  await activeProjectStore.clearActiveProject();
+};
+
+const showCreateStoryPage = () => {
+  appStore.openModal('create-story', AddStoryForm, 'Create Story');
 };
 
 watch(
   () => route.params.projectId,
   async newId => {
     activeProjectStore.clearActiveProject();
-    console.log(newId);
     newId = Array.isArray(newId) ? newId[0] : newId;
     await activeProjectStore.setActiveProject(newId);
   },
@@ -48,17 +55,26 @@ watch(
             <h2>
               {{ activeProjectStore.activeProject.description }}
             </h2>
+            <Button @click="showCreateStoryPage">Add story</Button>
           </CardTitle>
         </CardHeader>
-        <Separator label="kanban"></Separator>
+        <Separator label="stories"></Separator>
         <CardContent class="grid gap-4 lg:grid-cols-3">
           <!-- TODO: make state cart into custom component -->
-          <div id="todo" class="project-story-state">todo</div>
+          <div id="todo" class="project-story-state">
+            todo
+            <p v-for="story in storyStore.getByStatus.todo">
+              {{ story.name }}
+            </p>
+          </div>
           <div
             id="doing"
             class="project-story-state bg-amber-50 dark:bg-amber-900/30"
           >
-            todo
+            doing
+            <p v-for="story in storyStore.getByStatus.doing">
+              {{ story.name }}
+            </p>
           </div>
           <div
             id="done"
@@ -69,16 +85,17 @@ watch(
         </CardContent>
       </Card>
     </div>
-    <div v-else>
+    <div v-if="activeProjectStore.error">
       <Card class="grid grid-cols-[1fr_auto] m-2 p-2">
         <h1 class="text-2xl font-semibold justify-self-center">
-          Couldn't load project details ;(
+          {{ activeProjectStore.error }}
         </h1>
         <Button @click="handleBackToDashboard" class="justify-self-end">
           Back
         </Button>
       </Card>
     </div>
+    <Toaster />
   </div>
 </template>
 

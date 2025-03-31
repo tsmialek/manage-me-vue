@@ -4,6 +4,7 @@ import { ref } from 'vue';
 
 import type { ProjectRecord } from '@/types';
 import { performAsyncOperation } from '@/lib/utils';
+import { useStoryStore } from '@/store';
 import ProjectService from '@/services/ProjectService';
 
 export const useActiveProjectStore = defineStore('active-project', () => {
@@ -11,6 +12,8 @@ export const useActiveProjectStore = defineStore('active-project', () => {
   const activeProjectId = useLocalStorage('active-project-id', '');
   const loading = ref(false);
   const error = ref(null);
+
+  const storyStore = useStoryStore();
 
   const fetchActiveProject = async () => {
     if (!activeProjectId.value) return;
@@ -23,7 +26,10 @@ export const useActiveProjectStore = defineStore('active-project', () => {
       loading,
       error
     );
-    if (response) activeProject.value = response;
+    if (response) {
+      activeProject.value = response;
+      await storyStore.fetchStoriesForProject(activeProject.value.id);
+    }
   };
 
   const setActiveProject = async (projectId: string) => {
@@ -36,6 +42,7 @@ export const useActiveProjectStore = defineStore('active-project', () => {
     activeProjectId.value = '';
     error.value = null;
     loading.value = false;
+    storyStore.clearStories();
   };
 
   return {

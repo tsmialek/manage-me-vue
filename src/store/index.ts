@@ -2,3 +2,4 @@ export * from '@/store/ProjectStore';
 export * from '@/store/UserStore';
 export * from '@/store/ActiveProjectStore';
 export * from '@/store/AppStore';
+export * from '@/store/StoryStore';
