@@ -2,13 +2,12 @@
 import { computed, onMounted, onUnmounted } from 'vue';
 import { useColorMode } from '@vueuse/core';
 
-import DataTable from '@/components/projects/data-table.vue';
+import { DataTable, columns } from '@/components/projects';
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/toast';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 
-import { columns } from '@/components/projects/columns';
 import { useProjectStore, useUserStore } from '@/store';
 import type { ProjectRecord } from '@/types';
 
