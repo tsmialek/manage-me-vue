@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import * as z from 'zod';
 
 import { useAppStore, useProjectStore } from '@/store';
-import type { ProjectBase } from '@/types';
+import type { BaseProject } from '@/types';
 
 const projectStore = useProjectStore();
 const appStore = useAppStore();
@@ -18,7 +18,7 @@ const schema = z.object({
 });
 
 // TODO: add assigning project to user
-async function onSubmit(values: Omit<ProjectBase, 'user'>) {
+async function onSubmit(values: Omit<BaseProject, 'user'>) {
   const newProject = {
     ...values,
     user: ['00zg5lax1dkz320'],

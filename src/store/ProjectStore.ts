@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 import ProjectService from '@/services/ProjectService';
-import type { ProjectRecord, ProjectBase } from '@/types';
+import type { ProjectRecord, BaseProject } from '@/types';
 import { useToast } from '@/components/ui/toast/use-toast';
 import { performAsyncOperation } from '@/lib/utils';
 
@@ -40,7 +40,7 @@ export const useProjectStore = defineStore('projects', () => {
     return result ?? null;
   };
 
-  const addProject = async (newProject: ProjectBase) => {
+  const addProject = async (newProject: BaseProject) => {
     const result = await performAsyncOperation(
       async () => {
         return await ProjectService.create(newProject);

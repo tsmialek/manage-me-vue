@@ -26,7 +26,7 @@ export class BasePocketBaseService<Base, Record> {
       return dbRecords.items;
     } catch (error) {
       console.error(error);
-      throw new Error('An error occured when getting projects info.');
+      throw new Error('An error occured when getting info.');
     }
   }
 
@@ -39,6 +39,7 @@ export class BasePocketBaseService<Base, Record> {
       return dbRecord;
     } catch (error: any) {
       console.log(error);
+      throw new Error('An error occured when getting info.');
     }
   }
 
@@ -51,7 +52,7 @@ export class BasePocketBaseService<Base, Record> {
       console.warn(error);
       if (error.status >= 500) throw new ServerError();
       if (error.status >= 400) throw new BadRequest();
-      else throw new Error('An error occured when deleting project');
+      else throw new Error('An error occured when deleting item');
     }
   }
 

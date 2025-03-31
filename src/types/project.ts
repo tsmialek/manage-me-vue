@@ -1,12 +1,12 @@
-import type { UserRecord } from '@/types';
+import type { StoryRecord, UserRecord } from '@/types';
 
-export type ProjectBase = {
+export type BaseProject = {
   title: string;
   description: string;
   user: string[];
 };
 
-export type ProjectRecord = ProjectBase & {
+export type ProjectRecord = BaseProject & {
   id: string;
   expand: ProjectRelations | null;
   created: string;
@@ -17,4 +17,5 @@ export type ProjectRecord = ProjectBase & {
 
 export type ProjectRelations = {
   user: UserRecord[];
+  stories: StoryRecord[];
 };
