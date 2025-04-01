@@ -1,14 +1,16 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-import type { StoryRecord } from '@/types';
+import type { NewStory, StoryRecord } from '@/types';
 import { performAsyncOperation } from '@/lib/utils';
+import { useToast } from '@/components/ui/toast';
 import { StoryService } from '@/services';
 
 export const useStoryStore = defineStore('story', () => {
   const stories = ref<StoryRecord[]>([]);
   const error = ref(null);
   const loading = ref(false);
+  const { toast } = useToast();
 
   const fetchStoriesForProject = async (projectId: string) => {
     if (!projectId) return;
@@ -22,6 +24,47 @@ export const useStoryStore = defineStore('story', () => {
       error
     );
     if (result) stories.value = result;
+  };
+
+  const getStory = async (storyId: string): Promise<StoryRecord | null> => {
+    const result = await performAsyncOperation(
+      async () => {
+        return await StoryService.getOne(storyId, {
+          expand: 'user,project',
+        });
+      },
+      loading,
+      error
+    );
+
+    return result ?? null;
+  };
+
+  const addStory = async (newStory: NewStory) => {
+    if (!newStory) return;
+    console.log(newStory);
+    const result = await performAsyncOperation(
+      async () => {
+        return await StoryService.create(newStory);
+      },
+      loading,
+      error
+    );
+    if (result) {
+      toast({
+        title: `Story ${result.name} created succesfully`,
+      });
+    }
+  };
+
+  const updateStory = async (story: StoryRecord) => {
+    const result = await performAsyncOperation(
+      async () => {
+        return await StoryService.update(story.id, story);
+      },
+      loading,
+      error
+    );
   };
 
   const getByStatus = computed(() => {
@@ -42,6 +85,34 @@ export const useStoryStore = defineStore('story', () => {
     stories.value = [];
   };
 
+  const handleRealTimeUpdates = async (action: string, record: StoryRecord) => {
+    switch (action) {
+      case 'create':
+        const story = await getStory(record.id);
+        if (story) stories.value = [...stories.value, story];
+        break;
+      case 'update':
+        const index = stories.value.findIndex(s => s.id === record.id);
+        if (index > -1) {
+          stories.value[index] = record;
+        }
+        break;
+      case 'delete':
+        stories.value = stories.value.filter(s => s.id !== record.id);
+        break;
+      default:
+        console.warn('Unknown projects collection action');
+    }
+  };
+
+  const initializeRealtimeUpdates = () => {
+    StoryService.subscribe('*', handleRealTimeUpdates);
+  };
+
+  const unsubscribeFromRealtimeUpdates = () => {
+    StoryService.unsubscribe();
+  };
+
   return {
     stories,
     error,
@@ -49,5 +120,9 @@ export const useStoryStore = defineStore('story', () => {
     getByStatus,
     fetchStoriesForProject,
     clearStories,
+    addStory,
+    updateStory,
+    initializeRealtimeUpdates,
+    unsubscribeFromRealtimeUpdates,
   };
 });
