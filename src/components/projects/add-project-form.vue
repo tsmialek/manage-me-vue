@@ -3,11 +3,12 @@ import { AutoForm } from '@/components/ui/auto-form';
 import { Button } from '@/components/ui/button';
 import * as z from 'zod';
 
-import { useAppStore, useProjectStore } from '@/store';
+import { useAppStore, useProjectStore, useUserStore } from '@/store';
 import type { BaseProject } from '@/types';
 
 const projectStore = useProjectStore();
 const appStore = useAppStore();
+const userStore = useUserStore();
 
 const schema = z.object({
   title: z.string(),
@@ -21,7 +22,7 @@ const schema = z.object({
 async function onSubmit(values: Omit<BaseProject, 'user'>) {
   const newProject = {
     ...values,
-    user: ['00zg5lax1dkz320'],
+    user: [userStore.currentUserId],
   };
   projectStore.addProject(newProject);
   appStore.closeModal();

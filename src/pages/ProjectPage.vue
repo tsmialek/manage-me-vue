@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import router from '@/router';
 import { useRoute } from 'vue-router';
-import { watch } from 'vue';
+import { onMounted, onUnmounted, watch } from 'vue';
 
 import { AddStoryForm } from '@/components/stories';
 import { Button } from '@/components/ui/button';
@@ -35,6 +35,14 @@ watch(
   },
   { immediate: true }
 );
+
+onMounted(async () => {
+  storyStore.initializeRealtimeUpdates();
+});
+
+onUnmounted(async () => {
+  storyStore.unsubscribeFromRealtimeUpdates();
+});
 </script>
 
 <template>
