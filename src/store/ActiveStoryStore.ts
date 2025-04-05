@@ -15,12 +15,12 @@ export const useActiveStoryStore = defineStore('active-story', () => {
 
   const taskStore = useTaskStore();
 
-  const fetchActiveProject = async () => {
+  const fetchActiveStory = async () => {
     if (!activeStoryId.value) return;
     const response = await performAsyncOperation(
       async () => {
         return await StoryService.getOne(activeStoryId.value, {
-          expand: 'user',
+          expand: 'owner',
         });
       },
       loading,
@@ -34,7 +34,7 @@ export const useActiveStoryStore = defineStore('active-story', () => {
 
   const setActiveStory = async (projectId: string) => {
     activeStoryId.value = projectId;
-    await fetchActiveProject();
+    await fetchActiveStory();
   };
 
   const clearActiveStory = () => {

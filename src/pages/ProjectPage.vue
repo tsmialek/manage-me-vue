@@ -12,10 +12,16 @@ import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { KanbanCard, KanbanItem } from '@/components/kanban';
 import { Separator } from '@/components/ui/separator';
 
-import { useActiveProjectStore, useAppStore, useStoryStore } from '@/store';
+import {
+  useActiveProjectStore,
+  useAppStore,
+  useStoryStore,
+  useActiveStoryStore,
+} from '@/store';
 
 const activeProjectStore = useActiveProjectStore();
 const storyStore = useStoryStore();
+const activeStoryStore = useActiveStoryStore();
 const appStore = useAppStore();
 const route = useRoute();
 
@@ -26,6 +32,12 @@ const handleBackToDashboard = async () => {
 
 const showCreateStoryPage = () => {
   appStore.openModal('create-story', StoryForm, 'Create Story');
+};
+
+const handleStorySelection = async (storyId: string) => {
+  activeStoryStore.setActiveStory(storyId);
+  const projectId = activeProjectStore.activeProjectId;
+  router.push(`/project/${projectId}/${storyId}`);
 };
 
 watch(
@@ -74,6 +86,7 @@ onUnmounted(async () => {
               <KanbanItem
                 v-for="story in storyStore.getByStatus.todo"
                 :story="story"
+                @click="handleStorySelection(story.id)"
               />
             </template>
           </KanbanCard>
@@ -83,6 +96,7 @@ onUnmounted(async () => {
               <KanbanItem
                 v-for="story in storyStore.getByStatus.doing"
                 :story="story"
+                @click="handleStorySelection(story.id)"
               />
             </template>
           </KanbanCard>
@@ -92,6 +106,7 @@ onUnmounted(async () => {
               <KanbanItem
                 v-for="story in storyStore.getByStatus.done"
                 :story="story"
+                @click="handleStorySelection(story.id)"
               />
             </template>
           </KanbanCard>

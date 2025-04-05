@@ -22,7 +22,7 @@ defineProps<{
     <Button
       size="sm"
       class="absolute top-2 right-2"
-      @click="
+      @click.stop="
         appStore.openModal('update-story', StoryForm, 'Update Story', {
           story: story,
         })
