@@ -51,7 +51,7 @@ export const useStoryStore = defineStore('story', () => {
     );
     if (result) {
       toast({
-        title: `Story ${result.name} created succesfully`,
+        title: `Story ${result.name} created successfully`,
       });
     }
   };
@@ -66,7 +66,7 @@ export const useStoryStore = defineStore('story', () => {
     );
     if (result) {
       toast({
-        title: `Story ${result.name} updated succesfully`,
+        title: `Story ${result.name} updated successfully`,
       });
     }
   };
@@ -106,7 +106,7 @@ export const useStoryStore = defineStore('story', () => {
         stories.value = stories.value.filter(s => s.id !== record.id);
         break;
       default:
-        console.warn('Unknown projects collection action');
+        console.warn('Unknown stories collection action');
     }
   };
 
