@@ -41,6 +41,7 @@ export const useProjectStore = defineStore('projects', () => {
   };
 
   const addProject = async (newProject: BaseProject) => {
+    if (!newProject) return;
     const result = await performAsyncOperation(
       async () => {
         return await ProjectService.create(newProject);

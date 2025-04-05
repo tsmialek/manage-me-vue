@@ -1,39 +1,56 @@
 <script setup lang="ts">
 import router from '@/router';
 import { useRoute } from 'vue-router';
-import { watch } from 'vue';
+import { onMounted, onUnmounted, watch } from 'vue';
 
+import { StoryForm } from '@/components/stories';
+import { PlusIcon } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
+import { Toaster } from '@/components/ui/toast';
 import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
+import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
+import { KanbanCard, KanbanItem } from '@/components/kanban';
 import { Separator } from '@/components/ui/separator';
 
-import { useActiveProjectStore } from '@/store';
+import { useActiveProjectStore, useAppStore, useStoryStore } from '@/store';
 
 const activeProjectStore = useActiveProjectStore();
+const storyStore = useStoryStore();
+const appStore = useAppStore();
 const route = useRoute();
 
 const handleBackToDashboard = async () => {
+  activeProjectStore.clearActiveProject();
   router.push({ name: 'Dashboard' });
-  await activeProjectStore.clearActiveProject();
+};
+
+const showCreateStoryPage = () => {
+  appStore.openModal('create-story', StoryForm, 'Create Story');
 };
 
 watch(
   () => route.params.projectId,
   async newId => {
     activeProjectStore.clearActiveProject();
-    console.log(newId);
     newId = Array.isArray(newId) ? newId[0] : newId;
     await activeProjectStore.setActiveProject(newId);
   },
   { immediate: true }
 );
+
+onMounted(async () => {
+  storyStore.initializeRealtimeUpdates();
+});
+
+onUnmounted(async () => {
+  storyStore.unsubscribeFromRealtimeUpdates();
+});
 </script>
 
 <template>
-  <div class="">
+  <div class="relative">
     <div v-if="activeProjectStore.activeProject" class="p-4 space-y-4">
-      <Card class="grid grid-cols-[1fr_auto] p-2">
+      <Card class="grid grid-cols-[1fr_auto] p-4">
         <h1 class="text-2xl font-semibold justify-self-center">
           {{ activeProjectStore.activeProject.title }}
         </h1>
@@ -42,43 +59,60 @@ watch(
         </Button>
       </Card>
       <Card class="p-4 space-y-4">
-        <CardHeader>
-          <CardTitle class="text-lg font-semibold space-y-2">
-            <p><Badge>description:</Badge></p>
-            <h2>
-              {{ activeProjectStore.activeProject.description }}
-            </h2>
+        <CardHeader class="space-y-2 p-2">
+          <p><Badge>description:</Badge></p>
+          <CardTitle>
+            {{ activeProjectStore.activeProject.description }}
           </CardTitle>
         </CardHeader>
-        <Separator label="kanban"></Separator>
-        <CardContent class="grid gap-4 lg:grid-cols-3">
+        <Separator label="stories"></Separator>
+        <CardContent class="grid gap-4 lg:grid-cols-3 items-start p-2">
           <!-- TODO: make state cart into custom component -->
-          <div id="todo" class="project-story-state">todo</div>
-          <div
-            id="doing"
-            class="project-story-state bg-amber-50 dark:bg-amber-900/30"
-          >
-            todo
-          </div>
-          <div
-            id="done"
-            class="project-story-state bg-emerald-50 dark:bg-emerald-900/30"
-          >
-            done
-          </div>
+          <KanbanCard variant="todo">
+            <template v-slot:title>ToDo</template>
+            <template v-slot:content>
+              <KanbanItem
+                v-for="story in storyStore.getByStatus.todo"
+                :story="story"
+              />
+            </template>
+          </KanbanCard>
+          <KanbanCard variant="doing">
+            <template v-slot:title>Doing</template>
+            <template v-slot:content>
+              <KanbanItem
+                v-for="story in storyStore.getByStatus.doing"
+                :story="story"
+              />
+            </template>
+          </KanbanCard>
+          <KanbanCard variant="done">
+            <template v-slot:title>Done</template>
+            <template v-slot:content>
+              <KanbanItem
+                v-for="story in storyStore.getByStatus.done"
+                :story="story"
+              />
+            </template>
+          </KanbanCard>
         </CardContent>
       </Card>
     </div>
-    <div v-else>
+    <div v-if="activeProjectStore.error">
       <Card class="grid grid-cols-[1fr_auto] m-2 p-2">
         <h1 class="text-2xl font-semibold justify-self-center">
-          Couldn't load project details ;(
+          {{ activeProjectStore.error }}
         </h1>
         <Button @click="handleBackToDashboard" class="justify-self-end">
           Back
         </Button>
       </Card>
     </div>
+    <Toaster />
+    <Button @click="showCreateStoryPage" class="fixed bottom-8 right-8">
+      <PlusIcon />
+      Add story
+    </Button>
   </div>
 </template>
 

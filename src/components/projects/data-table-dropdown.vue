@@ -10,9 +10,11 @@ import {
 import { MoreHorizontal } from 'lucide-vue-next';
 
 import type { ProjectRecord } from '@/types';
-import { useProjectStore } from '@/store';
+import { useProjectStore, useAppStore } from '@/store';
 
 const projectStore = useProjectStore();
+const appStore = useAppStore();
+
 defineProps<{
   project: ProjectRecord;
 }>();

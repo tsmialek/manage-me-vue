@@ -49,11 +49,14 @@ export const useUserStore = defineStore('users', () => {
     );
   };
 
+  const currentUserId = computed(() => currentUser.value?.id ?? '');
+
   return {
     currentUser,
     loading,
     error,
     isAuthenticated,
+    currentUserId,
     fetchCurrentUser,
     logIn,
     logOut,

@@ -59,7 +59,7 @@ export class BasePocketBaseService<Base, Record> {
   async create(data: Base, options?: RecordOptions) {
     try {
       const createResult = await this.pb
-        .collection('projects')
+        .collection(this.collectionName)
         .create<Record>(data as FormData, options);
 
       return createResult;
@@ -68,11 +68,11 @@ export class BasePocketBaseService<Base, Record> {
     }
   }
 
-  async update(id: string, options?: RecordOptions) {
+  async update(id: string, records: any) {
     try {
       const updateResult = await this.pb
         .collection(this.collectionName)
-        .update<Record>(id, options);
+        .update<Record>(id, records);
 
       return updateResult;
     } catch (error: any) {
