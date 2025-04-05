@@ -1,1 +1,1 @@
-export { default as AddStoryForm } from '@/components/stories/add-story-form.vue';
+export { default as StoryForm } from '@/components/stories/story-form.vue';
