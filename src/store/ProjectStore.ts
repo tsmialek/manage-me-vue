@@ -56,6 +56,20 @@ export const useProjectStore = defineStore('projects', () => {
     }
   };
 
+  const updateProject = async (id: string, project: any) => {
+    const result = await performAsyncOperation(
+      async () => {
+        return await ProjectService.update(id, project);
+      },
+      loading,
+      error
+    );
+    if (result) {
+      toast({
+        title: `Project ${result.title} updated successfully`,
+      });
+    }
+  };
   const deleteProject = async (project: ProjectRecord) => {
     const result = await performAsyncOperation(
       async () => {
@@ -66,7 +80,7 @@ export const useProjectStore = defineStore('projects', () => {
     );
     if (result) {
       toast({
-        title: `Project ${project.title} deleted succesfully`,
+        title: `Project ${project.title} deleted successfully`,
       });
     }
   };
@@ -81,9 +95,13 @@ export const useProjectStore = defineStore('projects', () => {
         if (project) projects.value = [...projects.value, project];
         break;
       case 'update':
+        const updatedProject = await getProject(record.id);
         const index = projects.value.findIndex(p => p.id === record.id);
-        if (index > -1) {
-          projects.value[index] = record;
+        if (index > -1 && updatedProject) {
+          // TODO: this if not efficient. Implemented only as temporary solution.
+          const updatedProjects = [...projects.value];
+          updatedProjects[index] = updatedProject;
+          projects.value = updatedProjects;
         }
         break;
       case 'delete':
@@ -109,6 +127,7 @@ export const useProjectStore = defineStore('projects', () => {
     fetchProjects,
     deleteProject,
     addProject,
+    updateProject,
     initializeRealtimeUpdates,
     unsubscribeFromRealtimeUpdates,
   };
