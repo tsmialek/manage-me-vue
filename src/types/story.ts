@@ -1,10 +1,15 @@
-import type { ProjectRecord, UserRecord } from '@/types';
+import type {
+  ProjectRecord,
+  UserRecord,
+  KanbanPriority,
+  KanbanStatus,
+} from '@/types';
 
 export type BaseStory = {
   name: string;
   description: string;
-  priority: 'low' | 'medium' | 'high';
-  status: 'todo' | 'doing' | 'done';
+  priority: KanbanPriority;
+  status: KanbanStatus;
 };
 
 export type NewStory = BaseStory & {

@@ -3,3 +3,5 @@ export * from '@/store/UserStore';
 export * from '@/store/ActiveProjectStore';
 export * from '@/store/AppStore';
 export * from '@/store/StoryStore';
+export * from '@/store/ActiveStoryStore';
+export * from '@/store/TaskStore';
