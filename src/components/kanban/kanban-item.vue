@@ -17,6 +17,8 @@ defineProps<{
   <div
     class="border-l-4 p-2 rounded-lg bg-white relative space-y-2 break-words"
   >
+    <!-- TODO: Add dropdown menu with update and delete options -->
+    <!-- TODO: (OPTIONALLY) add drag and drop functionality -->
     <Button
       size="sm"
       class="absolute top-2 right-2"
