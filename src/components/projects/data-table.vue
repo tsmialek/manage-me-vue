@@ -11,7 +11,7 @@ import {
   getFilteredRowModel,
 } from '@tanstack/vue-table';
 
-import AddProjectForm from './add-project-form.vue';
+import { ProjectForm } from '@/components/projects';
 import { valueUpdater } from '@/lib/utils';
 import { FilePlus2 } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
@@ -62,7 +62,7 @@ const handleProjectSelection = async (projectId: string) => {
 };
 
 const showCreateProjectModal = () => {
-  appStore.openModal('create-project', AddProjectForm, 'Create Project');
+  appStore.openModal('create-project', ProjectForm, 'Create Project');
 };
 </script>
 

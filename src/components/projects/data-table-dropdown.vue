@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-vue-next';
+import { ProjectForm } from '@/components/projects';
 
 import type { ProjectRecord } from '@/types';
 import { useProjectStore, useAppStore } from '@/store';
@@ -18,6 +19,12 @@ const appStore = useAppStore();
 defineProps<{
   project: ProjectRecord;
 }>();
+
+function onUpdateProject(project: ProjectRecord) {
+  appStore.openModal('update-project', ProjectForm, 'Update Project', {
+    project: project,
+  });
+}
 
 function copy(id: string) {
   navigator.clipboard.writeText(id);
@@ -37,7 +44,7 @@ function copy(id: string) {
       <DropdownMenuItem @click="copy(project.id)">
         Copy project id
       </DropdownMenuItem>
-      <DropdownMenuItem @click="projectStore.deleteProject(project)">
+      <DropdownMenuItem @click="onUpdateProject(project)">
         Update project
       </DropdownMenuItem>
       <DropdownMenuItem @click="projectStore.deleteProject(project)">
