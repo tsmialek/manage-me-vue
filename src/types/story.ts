@@ -8,7 +8,7 @@ export type BaseStory = {
 };
 
 export type NewStory = BaseStory & {
-  user: string;
+  owner: string;
   project: string;
 };
 
@@ -22,6 +22,6 @@ export type StoryRecord = BaseStory & {
 };
 
 export type StoryRelations = {
-  user: UserRecord;
+  owner: UserRecord;
   project: ProjectRecord;
 };

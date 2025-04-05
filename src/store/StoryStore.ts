@@ -30,7 +30,7 @@ export const useStoryStore = defineStore('story', () => {
     const result = await performAsyncOperation(
       async () => {
         return await StoryService.getOne(storyId, {
-          expand: 'user,project',
+          expand: 'owner,project',
         });
       },
       loading,
@@ -42,7 +42,6 @@ export const useStoryStore = defineStore('story', () => {
 
   const addStory = async (newStory: NewStory) => {
     if (!newStory) return;
-    console.log(newStory);
     const result = await performAsyncOperation(
       async () => {
         return await StoryService.create(newStory);
@@ -57,14 +56,19 @@ export const useStoryStore = defineStore('story', () => {
     }
   };
 
-  const updateStory = async (story: StoryRecord) => {
+  const updateStory = async (id: string, story: any) => {
     const result = await performAsyncOperation(
       async () => {
-        return await StoryService.update(story.id, story);
+        return await StoryService.update(id, story);
       },
       loading,
       error
     );
+    if (result) {
+      toast({
+        title: `Story ${result.name} updated succesfully`,
+      });
+    }
   };
 
   const getByStatus = computed(() => {
@@ -92,9 +96,10 @@ export const useStoryStore = defineStore('story', () => {
         if (story) stories.value = [...stories.value, story];
         break;
       case 'update':
+        const updatedStory = await getStory(record.id);
         const index = stories.value.findIndex(s => s.id === record.id);
-        if (index > -1) {
-          stories.value[index] = record;
+        if (index > -1 && updatedStory) {
+          stories.value[index] = updatedStory;
         }
         break;
       case 'delete':
