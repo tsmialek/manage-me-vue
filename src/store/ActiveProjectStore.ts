@@ -11,7 +11,7 @@ export const useActiveProjectStore = defineStore('active-project', () => {
   const activeProject = ref<ProjectRecord | null>(null);
   const activeProjectId = useLocalStorage('active-project-id', '');
   const loading = ref(false);
-  const error = ref(null);
+  const error = ref<string | null>(null);
 
   const storyStore = useStoryStore();
 

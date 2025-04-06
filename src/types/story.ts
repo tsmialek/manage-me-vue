@@ -12,6 +12,7 @@ export type BaseStory = {
   status: KanbanStatus;
 };
 
+// TODO: use partial instead of NewStory
 export type NewStory = BaseStory & {
   owner: string;
   project: string;

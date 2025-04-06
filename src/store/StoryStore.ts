@@ -71,6 +71,21 @@ export const useStoryStore = defineStore('story', () => {
     }
   };
 
+  const deleteStory = async (id: string) => {
+    const result = await performAsyncOperation(
+      async () => {
+        return await StoryService.delete(id);
+      },
+      loading,
+      error
+    );
+    if (result) {
+      toast({
+        title: 'Story deleted successfully',
+      });
+    }
+  };
+
   const getByStatus = computed(() => {
     const result: Record<string, StoryRecord[]> = {
       todo: [],
@@ -126,7 +141,9 @@ export const useStoryStore = defineStore('story', () => {
     fetchStoriesForProject,
     clearStories,
     addStory,
+    getStory,
     updateStory,
+    deleteStory,
     initializeRealtimeUpdates,
     unsubscribeFromRealtimeUpdates,
   };

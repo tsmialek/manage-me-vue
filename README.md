@@ -2,12 +2,17 @@
 
 ToDo:
 
-- [ ] Edit projects
+- [x] Edit projects
 - Implement stories functionality
   - Stories CRUD
-    - [ ] implement stories service
-    - [ ] implement stories store
+    - [x] implement stories service
+    - [x] implement stories store
   - Display stories in ProjectPage
-    - [ ] allow to change story status (context menu or drag and drop)
-    - [ ] allow to change story priority (context menu)
+    - [x] allow to change story status (context menu or drag and drop)
+    - [x] allow to change story priority (context menu)
     - [ ] OPTIONAL: allow to filter stories by priority
+
+Refactor ideas:
+
+- [ ] improve naming inside stores (e.g addStory -> add)
+- [ ] decrease repeatign code inside stores by extracting common entity functions (e.g. add, remove, update)
