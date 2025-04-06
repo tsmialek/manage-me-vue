@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/toast';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
-import { KanbanCard, KanbanItem } from '@/components/kanban';
+import { KanbanCard, KanbanListItem } from '@/components/kanban';
 import { Separator } from '@/components/ui/separator';
 
 import {
@@ -83,7 +83,7 @@ onUnmounted(async () => {
           <KanbanCard variant="todo">
             <template v-slot:title>ToDo</template>
             <template v-slot:content>
-              <KanbanItem
+              <KanbanListItem
                 v-for="story in storyStore.getByStatus.todo"
                 :story="story"
                 @click="handleStorySelection(story.id)"
@@ -93,7 +93,7 @@ onUnmounted(async () => {
           <KanbanCard variant="doing">
             <template v-slot:title>Doing</template>
             <template v-slot:content>
-              <KanbanItem
+              <KanbanListItem
                 v-for="story in storyStore.getByStatus.doing"
                 :story="story"
                 @click="handleStorySelection(story.id)"
@@ -103,7 +103,7 @@ onUnmounted(async () => {
           <KanbanCard variant="done">
             <template v-slot:title>Done</template>
             <template v-slot:content>
-              <KanbanItem
+              <KanbanListItem
                 v-for="story in storyStore.getByStatus.done"
                 :story="story"
                 @click="handleStorySelection(story.id)"

@@ -1,16 +1,16 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="TExpand">
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Settings } from 'lucide-vue-next';
 import { StoryForm } from '../stories';
 
-import type { StoryRecord } from '@/types';
+import type { KanbanItem } from '@/types';
 import { useAppStore } from '@/store';
 
 const appStore = useAppStore();
 
 defineProps<{
-  story: StoryRecord;
+  story: KanbanItem<TExpand>;
 }>();
 </script>
 <template>

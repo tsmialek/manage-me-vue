@@ -6,19 +6,19 @@ import { performAsyncOperation } from '@/lib/utils';
 import { useToast } from '@/components/ui/toast';
 import { TaskService } from '@/services';
 
-export const useTaskStore = defineStore('story', () => {
+export const useTaskStore = defineStore('task', () => {
   const tasks = ref<TaskRecord[]>([]);
   const error = ref(null);
   const loading = ref(false);
   const { toast } = useToast();
 
-  const fetchTasksForStory = async (projectId: string) => {
-    if (!projectId) return;
+  const fetchTasksForStory = async (storyId: string) => {
+    if (!storyId) return;
     const result = await performAsyncOperation(
       async () =>
         await TaskService.getAll(1, 50, {
-          expand: 'owner,project',
-          filter: `project = "${projectId}"`,
+          expand: 'performer,story',
+          filter: `story = "${storyId}"`,
         }),
       loading,
       error
@@ -30,7 +30,7 @@ export const useTaskStore = defineStore('story', () => {
     const result = await performAsyncOperation(
       async () => {
         return await TaskService.getOne(storyId, {
-          expand: 'owner,project',
+          expand: 'performer,story',
         });
       },
       loading,
@@ -119,7 +119,7 @@ export const useTaskStore = defineStore('story', () => {
   };
 
   return {
-    stories: tasks,
+    tasks,
     error,
     loading,
     getByStatus,

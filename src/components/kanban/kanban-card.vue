@@ -2,11 +2,10 @@
 import { defineProps } from 'vue';
 
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
-import type { kanbanVariant } from '.';
 import { variants } from '.';
 
 defineProps<{
-  variant: kanbanVariant;
+  variant: 'todo' | 'doing' | 'done';
 }>();
 </script>
 <template>
