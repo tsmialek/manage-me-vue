@@ -17,7 +17,7 @@ export type KanbanItem = {
   id: string;
   status: KanbanStatus;
   priority: KanbanPriority;
-  name: string;
+  title: string;
   description: string;
   expand?: any;
 };

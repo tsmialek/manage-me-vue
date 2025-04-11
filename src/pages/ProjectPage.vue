@@ -25,10 +25,10 @@ const showCreateStoryPage = () => {
   appStore.openModal('create-story', StoryForm, 'Create Story');
 };
 
-const handleStorySelection = async (storyId: string) => {
-  activeStoryStore.setActiveStory(storyId);
+const handleStorySelection = async (payload: KanbanItem) => {
+  activeStoryStore.setActiveStory(payload.id);
   const projectId = activeProjectStore.activeProjectId;
-  router.push(`/project/${projectId}/${storyId}`);
+  router.push(`/project/${projectId}/${payload.id}`);
 };
 
 const handleStoryEdit = async (payload: KanbanItem) => {

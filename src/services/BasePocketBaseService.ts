@@ -21,7 +21,10 @@ export class BasePocketBaseService<Base, Record> {
     try {
       const dbRecords = await this.pb
         .collection(this.collectionName)
-        .getList<Record>(page, perPage, options);
+        .getList<Record>(page, perPage, {
+          ...options,
+          $autoCancel: false,
+        });
 
       return dbRecords.items;
     } catch (error) {

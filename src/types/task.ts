@@ -6,7 +6,7 @@ import type {
 } from '@/types';
 
 export type BaseTask = {
-  name: string;
+  title: string;
   description: string;
   priority: KanbanPriority;
   status: KanbanStatus;

@@ -20,6 +20,7 @@ const emit = defineEmits(['edit', 'delete', 'click']);
   >
     <!-- TODO: Add dropdown menu with update and delete options -->
     <!-- TODO: (OPTIONALLY) add drag and drop functionality -->
+    <!-- TODO: Check if scoped props can be used -->
     <Button
       size="sm"
       class="absolute top-2 right-2"
@@ -27,8 +28,7 @@ const emit = defineEmits(['edit', 'delete', 'click']);
     >
       <Settings />
     </Button>
-
-    <h3 class="m-0">{{ item.name }}</h3>
+    <h3 class="m-0">{{ item.title }}</h3>
     <p class="text-xs">{{ item.description }}</p>
     <div class="space-x-2">
       <Badge variant="secondary">Priority: {{ item.priority }}</Badge>

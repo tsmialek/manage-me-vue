@@ -51,7 +51,7 @@ export const useStoryStore = defineStore('story', () => {
     );
     if (result) {
       toast({
-        title: `Story ${result.name} created successfully`,
+        title: `Story ${result.title} created successfully`,
       });
     }
   };
@@ -66,7 +66,7 @@ export const useStoryStore = defineStore('story', () => {
     );
     if (result) {
       toast({
-        title: `Story ${result.name} updated successfully`,
+        title: `Story ${result.title} updated successfully`,
       });
     }
   };

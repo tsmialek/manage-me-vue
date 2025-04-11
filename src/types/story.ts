@@ -6,7 +6,7 @@ import type {
 } from '@/types';
 
 export type BaseStory = {
-  name: string;
+  title: string;
   description: string;
   priority: KanbanPriority;
   status: KanbanStatus;

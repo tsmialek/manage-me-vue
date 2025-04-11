@@ -51,7 +51,7 @@ export const useTaskStore = defineStore('task', () => {
     );
     if (result) {
       toast({
-        title: `Task ${result.name} created successfully`,
+        title: `Task ${result.title} created successfully`,
       });
     }
   };
@@ -66,7 +66,7 @@ export const useTaskStore = defineStore('task', () => {
     );
     if (result) {
       toast({
-        title: `Task ${result.name} updated successfully`,
+        title: `Task ${result.title} updated successfully`,
       });
     }
   };
@@ -125,6 +125,7 @@ export const useTaskStore = defineStore('task', () => {
     getByStatus,
     fetchTasksForStory,
     clearTasks,
+    getTask,
     addTask,
     updateTask,
     initializeRealtimeUpdates,

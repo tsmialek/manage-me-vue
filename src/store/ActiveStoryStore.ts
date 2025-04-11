@@ -32,8 +32,8 @@ export const useActiveStoryStore = defineStore('active-story', () => {
     }
   };
 
-  const setActiveStory = async (projectId: string) => {
-    activeStoryId.value = projectId;
+  const setActiveStory = async (storyId: string) => {
+    activeStoryId.value = storyId;
     await fetchActiveStory();
   };
 
@@ -46,8 +46,8 @@ export const useActiveStoryStore = defineStore('active-story', () => {
   };
 
   return {
-    activeProject: activeStory,
-    activeProjectId: activeStoryId,
+    activeStory,
+    activeStoryId,
     loading,
     error,
     clearActiveStory,
