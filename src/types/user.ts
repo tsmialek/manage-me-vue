@@ -11,10 +11,12 @@ export type UserRecord =
       created: Date;
       updated: Date;
       avatar?: string;
-      role: string;
+      role: UserRole;
     })
   | null;
 
 export type NewUser = BaseUser & {
   password: string;
 };
+
+export type UserRole = 'admin' | 'devops' | 'developer';

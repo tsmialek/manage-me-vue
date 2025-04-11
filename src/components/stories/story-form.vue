@@ -9,7 +9,7 @@ import {
   useAuthStore,
   useActiveProjectStore,
 } from '@/store';
-import type { KanbanItem, NewStory, StoryRecord } from '@/types';
+import type { NewStory, StoryRecord } from '@/types';
 import { KanbanPriority, KanbanStatus } from '@/types';
 
 const { story } = defineProps<{
@@ -23,7 +23,7 @@ const activeProjectStore = useActiveProjectStore();
 
 const initialValues = story
   ? {
-      name: story.title,
+      title: story.title,
       description: story.description,
       priority: story.priority,
       status: story.status,

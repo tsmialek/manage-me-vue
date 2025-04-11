@@ -7,7 +7,7 @@ import { performAsyncOperation } from '@/lib/utils';
 import UserService from '@/services/UserService';
 import router from '@/router';
 
-export const useAuthStore = defineStore('users', () => {
+export const useAuthStore = defineStore('auth', () => {
   const currentUser = useStorage<UserRecord | null>(
     'current-user',
     null,

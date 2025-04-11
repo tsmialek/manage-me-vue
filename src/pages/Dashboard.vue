@@ -44,20 +44,28 @@ onUnmounted(async () => {
   projectStore.unsubscribeFromRealtimeUpdates();
 });
 </script>
-<!-- TODO: create global appStore to manage modals and loading state -->
 <template>
-  <div class="">
-    <div class="">
-      <p>Logged in as: {{ authStore.currentUser?.name }}</p>
-      <Badge>{{ authStore.currentUser?.role }}</Badge>
-      <Button @click="authStore.logOut()">Logout</Button>
-      <Label for="theme">Choose theme</Label>
-      <Switch
-        :model-value="isDark"
-        @update:model-value="toggleTheme"
-        id="theme"
-      ></Switch>
-    </div>
+  <div>
+    <Card class="container mx-auto my-4 p-4 flex justify-between">
+      <div class="space-y-2 text-lg font-semibold">
+        <p>User: {{ authStore.currentUser?.name }}</p>
+        <p>
+          Role:
+          <Badge>{{ authStore.currentUser?.role }}</Badge>
+        </p>
+      </div>
+      <div class="space-y-2 flex flex-col items-end">
+        <Button @click="authStore.logOut()">Logout</Button>
+        <div class="flex items-center space-x-2">
+          <Label for="theme">Choose theme</Label>
+          <Switch
+            :model-value="isDark"
+            @update:model-value="toggleTheme"
+            id="theme"
+          ></Switch>
+        </div>
+      </div>
+    </Card>
     <div class="container py-10 mx-auto">
       <DataTable
         :columns="columns(handleDropdownAction)"
