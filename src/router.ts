@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
-import { useUserStore } from '@/store/UserStore';
+import { useAuthStore } from '@/store/AuthStore';
 import { LoginPage, Dashboard, ProjectPage, StoryPage } from '@/pages';
 
 const routes = [
@@ -16,11 +16,11 @@ const routes = [
 const router = createRouter({ history: createWebHashHistory(), routes });
 
 router.beforeEach(async (to, from, next) => {
-  const userStore = useUserStore();
-  // if (to.name != 'Login' && !userStore.isAuthenticated) {
-  //   return next({ name: 'Login' });
-  // }
-  if (to.name === 'Login' && userStore.isAuthenticated) {
+  const authStore = useAuthStore();
+  if (to.name != 'Login' && !authStore.isAuthenticated) {
+    return next({ name: 'Login' });
+  }
+  if (to.name === 'Login' && authStore.isAuthenticated) {
     return next(from);
   }
 

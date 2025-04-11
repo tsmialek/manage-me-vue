@@ -1,13 +1,21 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
+import { useStorage, StorageSerializers } from '@vueuse/core';
 
 import type { NewUser, UserRecord } from '@/types';
 import { performAsyncOperation } from '@/lib/utils';
 import UserService from '@/services/UserService';
 import router from '@/router';
 
-export const useUserStore = defineStore('users', () => {
-  const currentUser = ref<UserRecord>(null);
+export const useAuthStore = defineStore('users', () => {
+  const currentUser = useStorage<UserRecord | null>(
+    'current-user',
+    null,
+    undefined,
+    {
+      serializer: StorageSerializers.object,
+    }
+  );
   const loading = ref(false);
   const error = ref(null);
 

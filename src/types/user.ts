@@ -11,6 +11,7 @@ export type UserRecord =
       created: Date;
       updated: Date;
       avatar?: string;
+      role: string;
     })
   | null;
 

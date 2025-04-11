@@ -51,10 +51,10 @@ onUnmounted(async () => {
 
 <template>
   <KanbanPageLayout
-    add-button-label="Add story"
-    separator-label="stories"
+    add-button-label="Create Task"
+    separator-label="tasks"
+    :title="`Story: ${activeStoryStore.activeStory?.title ?? ''}`"
     :description="activeStoryStore.activeStory?.description ?? ''"
-    :title="activeStoryStore.activeStory?.title ?? ''"
     :error="activeStoryStore.error"
     @add="showCreateTaskPage"
   >

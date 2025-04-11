@@ -4,15 +4,17 @@ import { useColorMode } from '@vueuse/core';
 
 import { DataTable, columns } from '@/components/projects';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Toaster } from '@/components/ui/toast';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Card } from '@/components/ui/card';
 
-import { useProjectStore, useUserStore } from '@/store';
+import { useProjectStore, useAuthStore } from '@/store';
 import type { ProjectRecord } from '@/types';
 
 const projectStore = useProjectStore();
-const userStore = useUserStore();
+const authStore = useAuthStore();
 
 const mode = useColorMode({ disableTransition: false });
 const isDark = computed(() => mode.value === 'dark');
@@ -45,9 +47,10 @@ onUnmounted(async () => {
 <!-- TODO: create global appStore to manage modals and loading state -->
 <template>
   <div class="">
-    <div>
-      <p>Logged in as: {{ userStore.currentUser?.name }}</p>
-      <Button @click="userStore.logOut()">Logout</Button>
+    <div class="">
+      <p>Logged in as: {{ authStore.currentUser?.name }}</p>
+      <Badge>{{ authStore.currentUser?.role }}</Badge>
+      <Button @click="authStore.logOut()">Logout</Button>
       <Label for="theme">Choose theme</Label>
       <Switch
         :model-value="isDark"

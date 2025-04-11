@@ -63,8 +63,8 @@ onUnmounted(async () => {
   <KanbanPageLayout
     add-button-label="Add story"
     separator-label="stories"
+    :title="`Project: ${activeProjectStore.activeProject?.title ?? ''}`"
     :description="activeProjectStore.activeProject?.description ?? ''"
-    :title="activeProjectStore.activeProject?.title ?? ''"
     :error="activeProjectStore.error"
     @add="showCreateStoryPage"
   >

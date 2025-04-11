@@ -3,12 +3,12 @@ import { AutoForm } from '@/components/ui/auto-form';
 import { Button } from '@/components/ui/button';
 import * as z from 'zod';
 
-import { useAppStore, useProjectStore, useUserStore } from '@/store';
+import { useAppStore, useProjectStore, useAuthStore } from '@/store';
 import type { BaseProject, ProjectRecord } from '@/types';
 
 const projectStore = useProjectStore();
 const appStore = useAppStore();
-const userStore = useUserStore();
+const authStore = useAuthStore();
 
 const { project } = defineProps<{
   project: ProjectRecord;
@@ -38,7 +38,7 @@ async function onSubmit(values: Omit<BaseProject, 'user'>) {
     // create
     const newProject = {
       ...values,
-      user: [userStore.currentUserId],
+      user: [authStore.currentUserId],
     };
     await projectStore.addProject(newProject);
   }

@@ -4,10 +4,10 @@ import { Toaster } from '@/components/ui/toast';
 import { AutoForm } from '@/components/ui/auto-form';
 import * as z from 'zod';
 
-import { useUserStore } from '@/store';
+import { useAuthStore } from '@/store';
 import type { NewUser } from '@/types';
 
-const userStore = useUserStore();
+const authStore = useAuthStore();
 
 const schema = z.object({
   email: z.string(),
@@ -15,8 +15,8 @@ const schema = z.object({
 });
 
 async function onSubmit(credentials: NewUser) {
-  userStore.logIn(credentials);
-  // userStore.logIn({ email: 'tomek@manage-me.com', password: 'tomeksmialek' });
+  authStore.logIn(credentials);
+  // authStore.logIn({ email: 'tomek@manage-me.com', password: 'tomeksmialek' });
 }
 </script>
 
