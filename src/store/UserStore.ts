@@ -1,64 +1,52 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
-import type { NewUser, UserRecord } from '@/types';
+import type { UserRecord, UserRole } from '@/types';
 import { performAsyncOperation } from '@/lib/utils';
 import UserService from '@/services/UserService';
-import router from '@/router';
 
 export const useUserStore = defineStore('users', () => {
-  const currentUser = ref<UserRecord>(null);
+  const users = ref<UserRecord[]>();
   const loading = ref(false);
   const error = ref(null);
 
-  const isAuthenticated = computed(() => !!currentUser.value);
-
-  const fetchCurrentUser = async () => {
-    const fetchResponse = await performAsyncOperation(
+  const fetchUsers = async () => {
+    const result = await performAsyncOperation(
       async () => {
-        return await UserService.getCurrentUser();
+        return await UserService.getAll(1, 50);
       },
       loading,
       error
     );
-    currentUser.value = fetchResponse ?? null;
+    if (result) users.value = result;
   };
 
-  const logIn = async (newUser: NewUser) => {
-    const loginResponse = await performAsyncOperation(
-      async () => await UserService.logIn(newUser),
-      loading,
-      error
-    );
+  const getByRole = computed(() => {
+    const roleMap: Record<UserRole, UserRecord[]> = {
+      admin: [],
+      devops: [],
+      developer: [],
+    };
 
-    if (loginResponse) {
-      currentUser.value = loginResponse;
-      router.push({ name: 'Dashboard' });
+    if (users.value) {
+      users.value.forEach(user => {
+        if (user && user.role) {
+          if (roleMap[user.role] !== undefined) {
+            roleMap[user.role].push(user);
+          }
+        }
+      });
     }
-  };
+  });
 
-  const logOut = async () => {
-    await performAsyncOperation(
-      async () => {
-        await UserService.logOut();
-        currentUser.value = null;
-        router.push({ name: 'Login' });
-      },
-      loading,
-      error
-    );
-  };
-
-  const currentUserId = computed(() => currentUser.value?.id ?? '');
+  onMounted(async () => {
+    await fetchUsers();
+  });
 
   return {
-    currentUser,
+    users,
     loading,
     error,
-    isAuthenticated,
-    currentUserId,
-    fetchCurrentUser,
-    logIn,
-    logOut,
+    getByRole,
   };
 });

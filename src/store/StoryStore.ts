@@ -51,7 +51,7 @@ export const useStoryStore = defineStore('story', () => {
     );
     if (result) {
       toast({
-        title: `Story ${result.name} created successfully`,
+        title: `Story ${result.title} created successfully`,
       });
     }
   };
@@ -66,7 +66,22 @@ export const useStoryStore = defineStore('story', () => {
     );
     if (result) {
       toast({
-        title: `Story ${result.name} updated successfully`,
+        title: `Story ${result.title} updated successfully`,
+      });
+    }
+  };
+
+  const deleteStory = async (id: string) => {
+    const result = await performAsyncOperation(
+      async () => {
+        return await StoryService.delete(id);
+      },
+      loading,
+      error
+    );
+    if (result) {
+      toast({
+        title: 'Story deleted successfully',
       });
     }
   };
@@ -126,7 +141,9 @@ export const useStoryStore = defineStore('story', () => {
     fetchStoriesForProject,
     clearStories,
     addStory,
+    getStory,
     updateStory,
+    deleteStory,
     initializeRealtimeUpdates,
     unsubscribeFromRealtimeUpdates,
   };
