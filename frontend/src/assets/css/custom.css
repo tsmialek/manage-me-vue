@@ -1,0 +1,9 @@
+@layer components {
+  .modal-overlay {
+    @apply fixed top-0 left-0 size-full bg-black dark:bg-white dark:bg-opacity-35 bg-opacity-50 flex justify-center items-center z-50;
+  }
+
+  .project-story-state {
+    @apply border rounded-lg p-2;
+  }
+}
