@@ -1,7 +1,10 @@
-import { BasePocketBaseService } from '@/services/BasePocketBaseService';
+import { BasePocketBaseService, type IUserService } from '@/services';
 import type { NewUser, UserRecord } from '@/types';
 
-class UserService extends BasePocketBaseService<NewUser, UserRecord> {
+class PocketBaseUserService
+  extends BasePocketBaseService<NewUser, UserRecord>
+  implements IUserService
+{
   constructor() {
     super('users');
   }
@@ -38,4 +41,4 @@ class UserService extends BasePocketBaseService<NewUser, UserRecord> {
   }
 }
 
-export default new UserService();
+export default PocketBaseUserService;

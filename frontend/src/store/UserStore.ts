@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue';
 
 import type { UserRecord, UserRole } from '@/types';
 import { performAsyncOperation } from '@/lib/utils';
-import UserService from '@/services/UserService';
+import { UserService } from '@/services';
 
 export const useUserStore = defineStore('users', () => {
   const users = ref<UserRecord[]>();

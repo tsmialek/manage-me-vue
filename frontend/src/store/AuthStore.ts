@@ -4,7 +4,7 @@ import { useStorage, StorageSerializers } from '@vueuse/core';
 
 import type { NewUser, UserRecord } from '@/types';
 import { performAsyncOperation } from '@/lib/utils';
-import UserService from '@/services/UserService';
+import { UserService } from '@/services';
 import router from '@/router';
 
 export const useAuthStore = defineStore('auth', () => {

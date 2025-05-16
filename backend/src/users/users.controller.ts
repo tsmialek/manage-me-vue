@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { User, UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
