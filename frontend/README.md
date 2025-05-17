@@ -3,6 +3,11 @@
 ToDo:
 
 - [x] Edit projects
+- [ ] Add dropdown with [edit, delete] to stories and tasks
+- [ ] Implement drag and drop for tasks and stories
+- [ ] Implement ApiUserService
+- [ ] Implement tasks
+- [ ] Add sidebar and header
 - Implement stories functionality
   - Stories CRUD
     - [x] implement stories service

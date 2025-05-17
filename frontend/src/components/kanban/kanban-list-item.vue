@@ -20,7 +20,7 @@ const emit = defineEmits(['edit', 'delete', 'click']);
   >
     <!-- TODO: Add dropdown menu with update and delete options -->
     <!-- TODO: (OPTIONALLY) add drag and drop functionality -->
-    <!-- TODO: Check if scoped props can be used -->
+    <!-- TODO: Check if scoped slots can be used -->
     <Button
       size="sm"
       class="absolute top-2 right-2"
