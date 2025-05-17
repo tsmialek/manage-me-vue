@@ -22,37 +22,37 @@ export class AuthService {
     if (user?.password !== pass) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.userId, username: user.username };
+    const payload = { sub: user.id, email: user.email };
 
     const access_token = await this.jwtService.signAsync(payload, {
-      secret: process.env.ACCESS_SECRET,
+      secret: 'access',
     });
     const refresh_token = await this.jwtService.signAsync(payload, {
-      secret: process.env.REFRESH_SECRET,
+      secret: 'refresh',
     });
-    this.refreshTokenStorage.set(user.userId, refresh_token);
+    this.refreshTokenStorage.set(user.id, refresh_token);
 
     return { access_token, refresh_token };
   }
 
   async refreshToken(
-    userId: string,
+    id: string,
     refreshToken: string,
   ): Promise<{ access_token: string }> {
-    const stored = this.refreshTokenStorage.get(userId);
+    const stored = this.refreshTokenStorage.get(id);
     if (!stored || stored !== refreshToken) {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
     try {
       const payload = await this.jwtService.verifyAsync(refreshToken, {
-        secret: process.env.REFRESH_SECRET,
+        secret: 'refresh',
       });
 
       const newAccessToken = await this.jwtService.signAsync(
         { sub: payload.sub, username: payload.username },
         {
-          secret: process.env.REFRESH_SECRET,
+          secret: 'access',
           expiresIn: '15m',
         },
       );
