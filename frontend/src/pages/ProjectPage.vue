@@ -3,6 +3,8 @@ import router from '@/router';
 import { useRoute } from 'vue-router';
 import { onMounted, onUnmounted, watch } from 'vue';
 
+import { Badge } from '@/components/ui/badge';
+
 import { StoryForm } from '@/components/stories';
 import { KanbanPageLayout } from '@/pages/layouts';
 import { KanbanBoard } from '@/components/kanban';
@@ -73,7 +75,16 @@ onUnmounted(async () => {
       @item-click="handleStorySelection"
       @item-edit="handleStoryEdit"
       @item-delete="handleStoryDelete"
-    ></KanbanBoard>
+    >
+      <template #item-name="{ item }">{{ item.title }}</template>
+      <template #item-description="{ item }">{{ item.description }}</template>
+      <template #item-badges="{ item }">
+        <Badge variant="secondary">Priority: {{ item.priority }}</Badge>
+        <Badge variant="secondary">
+          Owner: {{ item.expand?.owner?.name ?? '---' }}
+        </Badge>
+      </template>
+    </KanbanBoard>
   </KanbanPageLayout>
 </template>
 

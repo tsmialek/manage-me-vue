@@ -1,5 +1,3 @@
-import type { TaskRelations, StoryRelations, ProjectRelations } from '@/types';
-
 export enum KanbanPriority {
   low = 'low',
   medium = 'medium',
@@ -16,8 +14,4 @@ export enum KanbanStatus {
 export type KanbanItem = {
   id: string;
   status: KanbanStatus;
-  priority: KanbanPriority;
-  title: string;
-  description: string;
-  expand?: any;
 };
