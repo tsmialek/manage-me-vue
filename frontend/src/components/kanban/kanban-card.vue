@@ -12,11 +12,11 @@ defineProps<{
   <Card :class="variants[variant]">
     <CardHeader class="px-4 py-6">
       <CardTitle class="text-center text-xl">
-        <slot name="title"></slot>
+        <span>{{ variant.toUpperCase() }}</span>
       </CardTitle>
     </CardHeader>
     <CardContent class="px-4 pb-4 space-y-4">
-      <slot name="content"></slot>
+      <slot />
     </CardContent>
   </Card>
 </template>

@@ -11,7 +11,7 @@ const props = defineProps<{
   items: T[];
 }>();
 
-const emit = defineEmits(['itemClick', 'itemEdit', 'itemDelete']);
+const emit = defineEmits<{ itemClick: [T]; itemEdit: [T]; itemDelete: [T] }>();
 
 const groupedItems = computed(() => {
   return {
@@ -24,52 +24,24 @@ const groupedItems = computed(() => {
 
 <template>
   <div class="grid gap-4 lg:grid-cols-3 items-start p-2">
-    <KanbanCard variant="todo">
-      <template v-slot:title>ToDo</template>
-      <template v-slot:content>
-        <KanbanListItem
-          v-for="item in groupedItems.todo"
-          :key="item.id"
-          :item="item"
-          :owner="item.expand?.owner?.name"
-          :performer="item.expand?.performer?.name"
-          @click="$emit('itemClick', item)"
-          @edit="$emit('itemEdit', item)"
-          @delete="$emit('itemDelete', item)"
-        />
-      </template>
-    </KanbanCard>
-
-    <KanbanCard variant="doing">
-      <template v-slot:title>Doing</template>
-      <template v-slot:content>
-        <KanbanListItem
-          v-for="item in groupedItems.doing"
-          :key="item.id"
-          :item="item"
-          :owner="item.expand?.owner?.name"
-          :performer="item.expand?.performer?.name"
-          @click="$emit('itemClick', item)"
-          @edit="$emit('itemEdit', item)"
-          @delete="$emit('itemDelete', item)"
-        />
-      </template>
-    </KanbanCard>
-
-    <KanbanCard variant="done">
-      <template v-slot:title>Done</template>
-      <template v-slot:content>
-        <KanbanListItem
-          v-for="item in groupedItems.done"
-          :key="item.id"
-          :item="item"
-          :owner="item.expand?.owner?.name"
-          :performer="item.expand?.performer?.name"
-          @click="$emit('itemClick', item)"
-          @edit="$emit('itemEdit', item)"
-          @delete="$emit('itemDelete', item)"
-        />
-      </template>
+    <KanbanCard v-for="status in KanbanStatus" :variant="status" :key="status">
+      <KanbanListItem
+        v-for="item in groupedItems[status]"
+        :key="item.id"
+        @click="$emit('itemClick', item)"
+        @edit="$emit('itemEdit', item)"
+        @delete="$emit('itemDelete', item)"
+      >
+        <template #title>
+          <slot name="item-name" :item="item" />
+        </template>
+        <template #description>
+          <slot name="item-description" :item="item" />
+        </template>
+        <template #badges>
+          <slot name="item-badges" :item="item" />
+        </template>
+      </KanbanListItem>
     </KanbanCard>
   </div>
 </template>

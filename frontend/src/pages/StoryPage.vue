@@ -2,6 +2,8 @@
 import { useRoute } from 'vue-router';
 import { onMounted, onUnmounted, watch } from 'vue';
 
+import { Badge } from '@/components/ui/badge';
+
 import { KanbanPageLayout } from '@/pages/layouts';
 import { KanbanBoard } from '@/components/kanban';
 
@@ -63,7 +65,16 @@ onUnmounted(async () => {
       @item-click="handleTaskSelection"
       @item-edit="handleTaskEdit"
       @item-delete="handleTaskDelete"
-    ></KanbanBoard>
+    >
+      <template #item-name="{ item }">{{ item.title }}</template>
+      <template #item-description="{ item }">{{ item.description }}</template>
+      <template #item-badges="{ item }">
+        <Badge variant="secondary">Priority: {{ item.priority }}</Badge>
+        <Badge :variant="item.expand?.performer ? 'secondary' : 'destructive'">
+          Performer: {{ item.expand?.performer?.name ?? 'Unassigned' }}
+        </Badge>
+      </template>
+    </KanbanBoard>
   </KanbanPageLayout>
 </template>
 
