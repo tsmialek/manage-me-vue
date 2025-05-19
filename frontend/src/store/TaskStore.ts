@@ -71,6 +71,21 @@ export const useTaskStore = defineStore('task', () => {
     }
   };
 
+  const deleteTask = async (id: string) => {
+    const result = await performAsyncOperation(
+      async () => {
+        return await TaskService.delete(id);
+      },
+      loading,
+      error
+    );
+    if (result) {
+      toast({
+        title: 'Task deleted successfully',
+      });
+    }
+  };
+
   const getByStatus = computed(() => {
     const result: Record<string, TaskRecord[]> = {
       todo: [],
@@ -128,6 +143,7 @@ export const useTaskStore = defineStore('task', () => {
     getTask,
     addTask,
     updateTask,
+    deleteTask,
     initializeRealtimeUpdates,
     unsubscribeFromRealtimeUpdates,
   };

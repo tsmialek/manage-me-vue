@@ -6,7 +6,7 @@ import { performAsyncOperation } from '@/lib/utils';
 import { UserService } from '@/services';
 
 export const useUserStore = defineStore('users', () => {
-  const users = ref<UserRecord[]>();
+  const users = ref<UserRecord[]>([]);
   const loading = ref(false);
   const error = ref(null);
 
@@ -37,6 +37,8 @@ export const useUserStore = defineStore('users', () => {
         }
       });
     }
+
+    return roleMap;
   });
 
   onMounted(async () => {

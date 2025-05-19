@@ -6,9 +6,10 @@ import { Badge } from '@/components/ui/badge';
 
 import { KanbanPageLayout } from '@/pages/layouts';
 import { KanbanBoard } from '@/components/kanban';
+import { TaskForm } from '@/components/tasks';
 
 import { useAppStore, useActiveStoryStore, useTaskStore } from '@/store';
-import type { KanbanItem } from '@/types';
+import type { TaskRecord } from '@/types';
 
 const activeStoryStore = useActiveStoryStore();
 const appStore = useAppStore();
@@ -16,20 +17,21 @@ const taskStore = useTaskStore();
 const route = useRoute();
 
 const showCreateTaskPage = () => {
-  // appStore.openModal('create-task', TaskForm, 'Create Task');
-  throw new Error('not implemented yet');
+  appStore.openModal('create-task', TaskForm, 'Create Task');
 };
 
-const handleTaskSelection = async (payload: KanbanItem) => {
-  throw new Error('not implemented yet');
+const handleTaskSelection = async (payload: TaskRecord) => {
+  appStore.openModal('task-details', TaskForm, `Task: ${payload.title}`, {
+    task: payload,
+  });
 };
 
-const handleTaskEdit = async (payload: KanbanItem) => {
-  throw new Error('not implemented yet');
+const handleTaskEdit = async (payload: TaskRecord) => {
+  handleTaskSelection(payload);
 };
 
-const handleTaskDelete = async (payload: KanbanItem) => {
-  throw new Error('not implemented yet');
+const handleTaskDelete = async (payload: TaskRecord) => {
+  taskStore.deleteTask(payload.id);
 };
 
 watch(
@@ -62,7 +64,7 @@ onUnmounted(async () => {
   >
     <KanbanBoard
       :items="taskStore.tasks"
-      @item-click="handleTaskSelection"
+      @item-select="handleTaskSelection"
       @item-edit="handleTaskEdit"
       @item-delete="handleTaskDelete"
     >

@@ -11,7 +11,7 @@ const props = defineProps<{
   items: T[];
 }>();
 
-const emit = defineEmits<{ itemClick: [T]; itemEdit: [T]; itemDelete: [T] }>();
+const emit = defineEmits<{ itemSelect: [T]; itemEdit: [T]; itemDelete: [T] }>();
 
 const groupedItems = computed(() => {
   return {
@@ -28,7 +28,7 @@ const groupedItems = computed(() => {
       <KanbanListItem
         v-for="item in groupedItems[status]"
         :key="item.id"
-        @click="$emit('itemClick', item)"
+        @select="$emit('itemSelect', item)"
         @edit="$emit('itemEdit', item)"
         @delete="$emit('itemDelete', item)"
       >

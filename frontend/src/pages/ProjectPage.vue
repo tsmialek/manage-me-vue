@@ -72,7 +72,7 @@ onUnmounted(async () => {
   >
     <KanbanBoard
       :items="storyStore.stories"
-      @item-click="handleStorySelection"
+      @item-select="handleStorySelection"
       @item-edit="handleStoryEdit"
       @item-delete="handleStoryDelete"
     >

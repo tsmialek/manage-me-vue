@@ -1,19 +1,37 @@
 <script setup lang="ts" generic="T extends KanbanItem">
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuContent,
+} from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Settings } from 'lucide-vue-next';
 
 import type { KanbanItem } from '@/types';
+import FormItem from '../ui/form/FormItem.vue';
 
-const emit = defineEmits(['edit', 'delete', 'click']);
+const emit = defineEmits(['edit', 'delete', 'select']);
 </script>
 <template>
   <div
-    class="border-l-4 p-2 rounded-lg bg-white relative space-y-2 break-words"
-    @click="emit('click')"
+    class="border-l-4 p-2 rounded-lg bg-white relative space-y-2 break-words cursor-pointer hover:bg-slate-50 hover:shadow-sm transition-all duration-200 ease-in-out"
+    @click="emit('select')"
   >
-    <Button size="sm" class="absolute top-2 right-2" @click.stop="emit('edit')">
-      <Settings />
-    </Button>
+    <div @click.stop class="absolute top-2 right-2">
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button size="sm">...</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem @click.stop="emit('edit')">Update</DropdownMenuItem>
+          <DropdownMenuItem @click.stop="emit('delete')">
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
     <h3 class="m-0"><slot name="title" /></h3>
     <p class="text-xs"><slot name="description" /></p>
     <div class="space-x-2">

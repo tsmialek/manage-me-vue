@@ -5,3 +5,4 @@ export * from '@/store/AppStore';
 export * from '@/store/StoryStore';
 export * from '@/store/ActiveStoryStore';
 export * from '@/store/TaskStore';
+export * from '@/store/UserStore';

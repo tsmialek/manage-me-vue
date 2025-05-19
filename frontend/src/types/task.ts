@@ -16,7 +16,7 @@ export type BaseTask = {
 };
 
 export type NewTask = BaseTask & {
-  performer: string;
+  performer?: string;
   story: string;
 };
 
