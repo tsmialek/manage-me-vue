@@ -7,18 +7,16 @@ import { useAppStore } from '@/store';
 
 const appStore = useAppStore();
 const isVisible = computed(() => appStore.activeModal !== null);
-const props = defineProps<{
+const { showOn = 'body' } = defineProps<{
   showOn?: string;
 }>();
-
-const showOn = props.showOn || 'body';
 </script>
 <template>
   <transition name="fade" mode="default">
     <teleport :to="showOn">
       <div
         class="modal-overlay"
-        @click="appStore.closeModal()"
+        @click="appStore.closeModalOnBlur ? appStore.closeModal() : null"
         v-if="isVisible"
       >
         <div id="modal-body" class="bg-background rounded-xl p-4" @click.stop>

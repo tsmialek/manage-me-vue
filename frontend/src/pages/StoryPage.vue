@@ -17,13 +17,19 @@ const taskStore = useTaskStore();
 const route = useRoute();
 
 const showCreateTaskPage = () => {
-  appStore.openModal('create-task', TaskForm, 'Create Task');
+  appStore.openModal('create-task', TaskForm, 'Create Task', {}, false);
 };
 
 const handleTaskSelection = async (payload: TaskRecord) => {
-  appStore.openModal('task-details', TaskForm, `Task: ${payload.title}`, {
-    task: payload,
-  });
+  appStore.openModal(
+    'task-details',
+    TaskForm,
+    `Task: ${payload.title}`,
+    {
+      task: payload,
+    },
+    false
+  );
 };
 
 const handleTaskEdit = async (payload: TaskRecord) => {
