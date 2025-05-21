@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
-import { markRaw, ref, shallowRef } from 'vue';
+import { computed, markRaw, ref, shallowRef } from 'vue';
+import { useColorMode } from '@vueuse/core';
 
 export const useAppStore = defineStore('app', () => {
   const activeModal = ref<string | null>(null);
@@ -7,6 +8,16 @@ export const useAppStore = defineStore('app', () => {
   const modalTitle = ref<string>('');
   const modalComponent = shallowRef<any>(null);
   const closeModalOnBlur = ref(true);
+
+  const colorMode = useColorMode({
+    disableTransition: false,
+    storage: localStorage,
+  });
+
+  const isDark = computed(() => colorMode.value === 'dark');
+  const toggleColorMode = () => {
+    colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark';
+  };
 
   const openModal = (
     modalId: string,
@@ -36,6 +47,8 @@ export const useAppStore = defineStore('app', () => {
     modalTitle,
     modalComponent,
     closeModalOnBlur,
+    isDark,
+    toggleColorMode,
     openModal,
     closeModal,
   };

@@ -3,20 +3,17 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuContent,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 
 import type { KanbanItem } from '@/types';
-import FormItem from '../ui/form/FormItem.vue';
 
 const emit = defineEmits(['edit', 'delete', 'select']);
 </script>
 <template>
   <div
-    class="border-l-4 p-2 rounded-lg bg-white relative space-y-2 break-words cursor-pointer hover:bg-slate-50 hover:shadow-sm transition-all duration-200 ease-in-out"
+    class="border-l-4 p-2 rounded-lg bg-white dark:bg-gray-800/30 relative space-y-2 break-words cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:shadow-sm transition-all duration-200 ease-in-out"
     @click="emit('select')"
   >
     <div @click.stop class="absolute top-2 right-2">
