@@ -50,7 +50,9 @@ onUnmounted(async () => {
       <div class="space-y-2 flex flex-col items-end">
         <Button @click="authStore.logOut()">Logout</Button>
         <div class="flex items-center space-x-2">
-          <Label for="theme">Choose theme</Label>
+          <Label for="theme">
+            Theme: {{ appStore.isDark ? 'Dark' : 'Light' }}
+          </Label>
           <Switch
             :model-value="appStore.isDark"
             @update:model-value="appStore.toggleColorMode()"

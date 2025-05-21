@@ -18,7 +18,14 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Select } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
@@ -40,7 +47,7 @@ import {
   useUserStore,
 } from '@/store';
 
-import type { NewTask, TaskRecord } from '@/types';
+import type { NewTask, TaskRecord, UserRecord } from '@/types';
 import { KanbanPriority, KanbanStatus } from '@/types';
 
 const { task } = defineProps<{
@@ -52,7 +59,7 @@ const taskStore = useTaskStore();
 const userStore = useUserStore();
 const activeStoryStore = useActiveStoryStore();
 
-const availableUsers = ref<string[]>([]);
+const availableUsers = ref<UserRecord[]>([]);
 const df = new DateFormatter('en-US', {
   dateStyle: 'long',
 });
@@ -111,13 +118,14 @@ const onSubmit = handleSubmit(values => {
 });
 
 onMounted(async () => {
-  availableUsers.value = userStore.getByRole.developer.map(
-    user => user?.name ?? '---'
+  availableUsers.value = userStore.getByRole.developer;
+  availableUsers.value = availableUsers.value.concat(
+    userStore.getByRole.devops
   );
 });
 </script>
 <template>
-  <div class="">
+  <div class="max-w-screen-md">
     <form @submit.prevent="onSubmit" class="space-y-6">
       <FormField
         v-slot="{ componentField: titleField }"
@@ -187,6 +195,92 @@ onMounted(async () => {
           <FormMessage />
         </FormItem>
       </FormField>
+      <div class="flex gap-6">
+        <FormField v-slot="{ componentField }" name="performer">
+          <FormItem class="w-1/3">
+            <FormLabel>Performer</FormLabel>
+            <Select v-bind="componentField">
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Unassigned" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="Unassigned">Unassigned</SelectItem>
+                  <SelectItem
+                    v-for="user in availableUsers"
+                    :key="user?.id"
+                    :value="user?.id ?? 'none'"
+                  >
+                    {{ user?.name ?? 'Error when fetching username' }}
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <FormDescription>
+              You can only assign users with role Developer or Devops
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="performer">
+          <FormItem class="w-1/3">
+            <FormLabel>Performer</FormLabel>
+            <Select v-bind="componentField">
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Unassigned" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="Unassigned">Unassigned</SelectItem>
+                  <SelectItem
+                    v-for="user in availableUsers"
+                    :key="user?.id"
+                    :value="user?.id ?? 'none'"
+                  >
+                    {{ user?.name ?? 'Error when fetching username' }}
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <FormDescription>
+              You can only assign users with role Developer or Devops
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="performer">
+          <FormItem class="w-1/3">
+            <FormLabel>Performer</FormLabel>
+            <Select v-bind="componentField">
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Unassigned" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="Unassigned">Unassigned</SelectItem>
+                  <SelectItem
+                    v-for="user in availableUsers"
+                    :key="user?.id"
+                    :value="user?.id ?? 'none'"
+                  >
+                    {{ user?.name ?? 'Error when fetching username' }}
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <FormDescription>
+              You can only assign users with role Developer or Devops
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
       <Button type="submit">Submit</Button>
     </form>
   </div>
