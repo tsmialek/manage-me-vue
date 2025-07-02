@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
-import { toDate } from 'reka-ui/date';
 import * as z from 'zod';
-
-import { CalendarIcon } from 'lucide-vue-next';
 
 import {
   FormControl,
@@ -25,19 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
-  CalendarDate,
-  DateFormatter,
-  getLocalTimeZone,
-  parseDate,
-  today,
-} from '@internationalized/date';
 
 import {
   useAppStore,
@@ -55,9 +39,13 @@ const userStore = useUserStore();
 const activeStoryStore = useActiveStoryStore();
 
 const availableUsers = ref<UserRecord[]>([]);
-const df = new DateFormatter('en-US', {
-  dateStyle: 'long',
-});
+
+// Priority options array
+const priorityOptions = [
+  { value: KanbanPriority.low, label: 'Low' },
+  { value: KanbanPriority.medium, label: 'Medium' },
+  { value: KanbanPriority.high, label: 'High' },
+];
 
 const formSchema = toTypedSchema(
   z.object({
@@ -69,25 +57,19 @@ const formSchema = toTypedSchema(
   })
 );
 
-const plannedEndPlaceholder = ref();
-const value = computed({
-  get: () =>
-    values.plannedEnd
-      ? parseDate(values.plannedEnd.replace(' ', 'T'))
-      : undefined,
-  set: val => val,
-});
-
-const { isFieldDirty, handleSubmit, setFieldValue, values } = useForm({
+const { isFieldDirty, handleSubmit } = useForm({
   validationSchema: formSchema,
 });
 
 const onSubmit = handleSubmit(async formValues => {
   try {
     const newTask: NewTask = {
-      ...formValues,
-      story: activeStoryStore.activeStoryId,
+      title: formValues.title,
+      description: formValues.description,
+      priority: formValues.priority,
       status: KanbanStatus.todo,
+      plannedEnd: new Date(formValues.plannedEnd).toISOString(),
+      story: activeStoryStore.activeStoryId,
     };
     await taskStore.addTask(newTask);
     appStore.closeModal();
@@ -152,9 +134,13 @@ onMounted(async () => {
             </FormControl>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="low">Low</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="high">High</SelectItem>
+                <SelectItem
+                  v-for="option in priorityOptions"
+                  :key="option.value"
+                  :value="option.value"
+                >
+                  {{ option.label }}
+                </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -162,12 +148,12 @@ onMounted(async () => {
         </FormItem>
       </FormField>
 
-      <FormField name="status">
+      <FormField v-slot="{ componentField: statusField }" name="status">
         <FormItem class="flex-1">
           <FormLabel>Status</FormLabel>
-          <Select>
+          <Select v-bind="statusField" disabled>
             <FormControl>
-              <SelectTrigger disabled>
+              <SelectTrigger>
                 <SelectValue placeholder="To Do" />
               </SelectTrigger>
             </FormControl>
@@ -177,41 +163,16 @@ onMounted(async () => {
       </FormField>
     </div>
 
-    <FormField name="plannedEnd">
+    <FormField name="plannedEnd" v-slot="{ componentField: plannedEndField }">
       <FormItem class="flex flex-col">
         <FormLabel>Planned End Date</FormLabel>
-        <Popover>
-          <PopoverTrigger as-child>
-            <FormControl>
-              <Button variant="outline">
-                <span>
-                  {{ value ? df.format(toDate(value)) : 'Pick a date' }}
-                </span>
-                <CalendarIcon class="ms-auto h-4 w-4 opacity-50" />
-              </Button>
-              <input hidden />
-            </FormControl>
-          </PopoverTrigger>
-          <PopoverContent class="w-auto p-0">
-            <Calendar
-              v-model:placeholder="plannedEndPlaceholder"
-              v-model="value"
-              calendar-label="Planned end date"
-              initial-focus
-              :max-value="new CalendarDate(2100, 1, 1)"
-              :min-value="today(getLocalTimeZone())"
-              @update:model-value="
-                v => {
-                  if (v) {
-                    setFieldValue('plannedEnd', v.toString());
-                  } else {
-                    setFieldValue('plannedEnd', undefined);
-                  }
-                }
-              "
-            />
-          </PopoverContent>
-        </Popover>
+        <FormControl>
+          <Input
+            type="datetime-local"
+            placeholder="Enter planned end date"
+            v-bind="plannedEndField"
+          />
+        </FormControl>
         <FormMessage />
       </FormItem>
     </FormField>
