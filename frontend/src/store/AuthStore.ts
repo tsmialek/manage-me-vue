@@ -24,9 +24,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const fetchCurrentUser = async () => {
     const fetchResponse = await performAsyncOperation(
-      async () => {
-        return await UserService.getCurrentUser();
-      },
+      () => UserService.getCurrentUser(),
       loading,
       error
     );
@@ -35,7 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const logIn = async (newUser: NewUser) => {
     const loginResponse = await performAsyncOperation(
-      async () => await UserService.logIn(newUser),
+      () => UserService.logIn(newUser),
       loading,
       error
     );

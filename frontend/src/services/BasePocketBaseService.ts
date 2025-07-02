@@ -37,7 +37,7 @@ export class BasePocketBaseService<Base, Record> {
     try {
       const dbRecord = await this.pb
         .collection(this.collectionName)
-        .getOne<Record>(id, options);
+        .getOne<Record>(id, { ...options, $autoCancel: false });
 
       return dbRecord;
     } catch (error: any) {

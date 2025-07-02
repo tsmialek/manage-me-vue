@@ -15,9 +15,9 @@ const schema = z.object({
 });
 
 async function onSubmit(credentials: NewUser) {
-  // authStore.logIn(credentials);
-  // authStore.logIn({ email: 'tomek@manage-me.com', password: 'tomeksmialek' });
-  authStore.apiLogIn(credentials);
+  authStore.logIn(credentials);
+  authStore.logIn({ email: 'tomek@manage-me.com', password: 'tomeksmialek' });
+  // authStore.apiLogIn(credentials);
 }
 </script>
 

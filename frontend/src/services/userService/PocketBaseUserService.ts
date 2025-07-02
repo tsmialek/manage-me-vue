@@ -22,7 +22,9 @@ class PocketBaseUserService
     try {
       const authData = await this.pb
         .collection(this.collectionName)
-        .authWithPassword<UserRecord>(newUser.email, newUser.password);
+        .authWithPassword<UserRecord>(newUser.email, newUser.password, {
+          $autoCancel: false,
+        });
 
       return authData.record;
     } catch (error) {
