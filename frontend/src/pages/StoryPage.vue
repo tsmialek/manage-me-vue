@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import router from '@/router';
 import { useRoute } from 'vue-router';
 import { onMounted, onUnmounted, watch } from 'vue';
 
@@ -8,12 +9,20 @@ import { KanbanPageLayout } from '@/pages/layouts';
 import { KanbanBoard } from '@/components/kanban';
 import { TaskForm } from '@/components/tasks';
 
-import { useAppStore, useActiveStoryStore, useTaskStore } from '@/store';
+import {
+  useAppStore,
+  useActiveStoryStore,
+  useTaskStore,
+  useActiveTaskStore,
+  useActiveProjectStore,
+} from '@/store';
 import type { TaskRecord } from '@/types';
 
 const activeStoryStore = useActiveStoryStore();
 const appStore = useAppStore();
 const taskStore = useTaskStore();
+const activeTaskStore = useActiveTaskStore();
+const activeProjectStore = useActiveProjectStore(); // Assuming this is the correct store for active project
 const route = useRoute();
 
 const showCreateTaskPage = () => {
@@ -22,6 +31,10 @@ const showCreateTaskPage = () => {
 
 const handleTaskSelection = async (payload: TaskRecord) => {
   console.log('Task selected:', payload);
+  activeTaskStore.setActiveTask(payload.id);
+  router.push(
+    `/project/${activeProjectStore.activeProjectId}/${activeStoryStore.activeStoryId}/${payload.id}`
+  );
 };
 
 const handleTaskDelete = async (payload: TaskRecord) => {

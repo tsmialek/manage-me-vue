@@ -1,7 +1,13 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import { useAuthStore } from '@/store/AuthStore';
-import { LoginPage, Dashboard, ProjectPage, StoryPage } from '@/pages';
+import {
+  LoginPage,
+  Dashboard,
+  ProjectPage,
+  StoryPage,
+  TaskDetails,
+} from '@/pages';
 
 const routes = [
   { path: '/login', name: 'Login', component: LoginPage },
@@ -11,6 +17,11 @@ const routes = [
     path: '/project/:projectId/:storyId',
     name: 'Story',
     component: StoryPage,
+  },
+  {
+    path: '/project/:projectId/:storyId/:taskId',
+    name: 'TaskDetails',
+    component: TaskDetails,
   },
 ];
 const router = createRouter({ history: createWebHashHistory(), routes });

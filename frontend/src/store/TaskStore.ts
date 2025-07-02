@@ -26,10 +26,10 @@ export const useTaskStore = defineStore('task', () => {
     if (result) tasks.value = result;
   };
 
-  const getTask = async (storyId: string): Promise<TaskRecord | null> => {
+  const getTask = async (taskId: string): Promise<TaskRecord | null> => {
     const result = await performAsyncOperation(
       async () => {
-        return await TaskService.getOne(storyId, {
+        return await TaskService.getOne(taskId, {
           expand: 'performer,story',
         });
       },
@@ -52,21 +52,6 @@ export const useTaskStore = defineStore('task', () => {
     if (result) {
       toast({
         title: `Task ${result.title} created successfully`,
-      });
-    }
-  };
-
-  const updateTask = async (id: string, task: Partial<TaskRecord>) => {
-    const result = await performAsyncOperation(
-      async () => {
-        return await TaskService.update(id, task);
-      },
-      loading,
-      error
-    );
-    if (result) {
-      toast({
-        title: `Task ${result.title} updated successfully`,
       });
     }
   };
@@ -142,7 +127,6 @@ export const useTaskStore = defineStore('task', () => {
     clearTasks,
     getTask,
     addTask,
-    updateTask,
     deleteTask,
     initializeRealtimeUpdates,
     unsubscribeFromRealtimeUpdates,
