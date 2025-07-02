@@ -47,12 +47,8 @@ import {
   useUserStore,
 } from '@/store';
 
-import type { NewTask, TaskRecord, UserRecord } from '@/types';
+import type { NewTask, UserRecord } from '@/types';
 import { KanbanPriority, KanbanStatus } from '@/types';
-
-const { task } = defineProps<{
-  task?: TaskRecord;
-}>();
 
 const appStore = useAppStore();
 const taskStore = useTaskStore();
@@ -64,31 +60,10 @@ const df = new DateFormatter('en-US', {
   dateStyle: 'long',
 });
 
-const initialValues = task
-  ? {
-      title: task.title,
-      description: task.description,
-      priority: task.priority,
-      status: task.status,
-      plannedEnd: new Date(task.plannedEnd).toISOString().split('T')[0],
-      startTime: task.startTime,
-      endTime: task.endTime,
-      performer: task.expand?.performer?.name ?? 'Unassigned',
-    }
-  : {
-      title: '',
-      description: '',
-      priority: KanbanPriority.low,
-      status: KanbanStatus.todo,
-      plannedEnd: '',
-      startTime: '',
-      endTime: '',
-      performer: 'Unassigned',
-    };
 
 const formSchema = toTypedSchema(
   z.object({
-    title: z.string().min(5),
+    title: z.string().min(5, 'Title must be at least 5 characters'),
     description: z.string(),
     priority: z.nativeEnum(KanbanPriority).default(KanbanPriority.low),
     status: z.nativeEnum(KanbanStatus).default(KanbanStatus.todo),
@@ -110,20 +85,29 @@ const value = computed({
 
 const { isFieldDirty, handleSubmit, setFieldValue, values } = useForm({
   validationSchema: formSchema,
-  initialValues,
 });
 
-const onSubmit = handleSubmit(values => {
-  console.log(values);
+const onSubmit = handleSubmit(async (formValues) => {
+  try {
+    const newTask: NewTask = {
+      ...formValues,
+      performer: formValues.performer === 'Unassigned' ? undefined : formValues.performer,
+      story: activeStoryStore.activeStoryId,
+    };
+    await taskStore.addTask(newTask);
+    appStore.closeModal();
+  } catch (error) {
+    console.error('Error creating task:', error);
+  }
 });
 
 onMounted(async () => {
-  availableUsers.value = userStore.getByRole.developer;
-  availableUsers.value = availableUsers.value.concat(
-    userStore.getByRole.devops
-  );
+  const developers = userStore.getByRole.developer || [];
+  const devops = userStore.getByRole.devops || [];
+  availableUsers.value = [...developers, ...devops];
 });
 </script>
+
 <template>
   <div class="max-w-screen-md">
     <form @submit.prevent="onSubmit" class="space-y-6">
@@ -135,11 +119,12 @@ onMounted(async () => {
         <FormItem>
           <FormLabel>Title</FormLabel>
           <FormControl>
-            <Input type="text" placeholder="Title" v-bind="titleField" />
+            <Input type="text" placeholder="Enter task title" v-bind="titleField" />
           </FormControl>
           <FormMessage />
         </FormItem>
       </FormField>
+
       <FormField
         v-slot="{ componentField: descriptionField }"
         name="description"
@@ -149,17 +134,61 @@ onMounted(async () => {
           <FormLabel>Description</FormLabel>
           <FormControl>
             <Textarea
-              type="text"
-              placeholder="description"
+              placeholder="Enter task description"
               v-bind="descriptionField"
             />
           </FormControl>
           <FormMessage />
         </FormItem>
       </FormField>
+
+      <div class="flex gap-6">
+        <FormField v-slot="{ componentField: priorityField }" name="priority">
+          <FormItem class="flex-1">
+            <FormLabel>Priority</FormLabel>
+            <Select v-bind="priorityField">
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select priority" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField: statusField }" name="status">
+          <FormItem class="flex-1">
+            <FormLabel>Status</FormLabel>
+            <Select v-bind="statusField">
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="todo">To Do</SelectItem>
+                  <SelectItem value="doing">Doing</SelectItem>
+                  <SelectItem value="done">Done</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+
       <FormField name="plannedEnd">
         <FormItem class="flex flex-col">
-          <FormLabel>PlannedEnd</FormLabel>
+          <FormLabel>Planned End Date</FormLabel>
           <Popover>
             <PopoverTrigger as-child>
               <FormControl>
@@ -176,7 +205,7 @@ onMounted(async () => {
               <Calendar
                 v-model:placeholder="plannedEndPlaceholder"
                 v-model="value"
-                calendar-label="Date of birth"
+                calendar-label="Planned end date"
                 initial-focus
                 :max-value="new CalendarDate(2100, 1, 1)"
                 :min-value="today(getLocalTimeZone())"
@@ -195,93 +224,61 @@ onMounted(async () => {
           <FormMessage />
         </FormItem>
       </FormField>
+
       <div class="flex gap-6">
-        <FormField v-slot="{ componentField }" name="performer">
-          <FormItem class="w-1/3">
-            <FormLabel>Performer</FormLabel>
-            <Select v-bind="componentField">
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Unassigned" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="Unassigned">Unassigned</SelectItem>
-                  <SelectItem
-                    v-for="user in availableUsers"
-                    :key="user?.id"
-                    :value="user?.id ?? 'none'"
-                  >
-                    {{ user?.name ?? 'Error when fetching username' }}
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <FormDescription>
-              You can only assign users with role Developer or Devops
-            </FormDescription>
+        <FormField v-slot="{ componentField: startTimeField }" name="startTime">
+          <FormItem class="flex-1">
+            <FormLabel>Start Time</FormLabel>
+            <FormControl>
+              <Input type="time" v-bind="startTimeField" />
+            </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="performer">
-          <FormItem class="w-1/3">
-            <FormLabel>Performer</FormLabel>
-            <Select v-bind="componentField">
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Unassigned" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="Unassigned">Unassigned</SelectItem>
-                  <SelectItem
-                    v-for="user in availableUsers"
-                    :key="user?.id"
-                    :value="user?.id ?? 'none'"
-                  >
-                    {{ user?.name ?? 'Error when fetching username' }}
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <FormDescription>
-              You can only assign users with role Developer or Devops
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-        <FormField v-slot="{ componentField }" name="performer">
-          <FormItem class="w-1/3">
-            <FormLabel>Performer</FormLabel>
-            <Select v-bind="componentField">
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Unassigned" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="Unassigned">Unassigned</SelectItem>
-                  <SelectItem
-                    v-for="user in availableUsers"
-                    :key="user?.id"
-                    :value="user?.id ?? 'none'"
-                  >
-                    {{ user?.name ?? 'Error when fetching username' }}
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <FormDescription>
-              You can only assign users with role Developer or Devops
-            </FormDescription>
+
+        <FormField v-slot="{ componentField: endTimeField }" name="endTime">
+          <FormItem class="flex-1">
+            <FormLabel>End Time</FormLabel>
+            <FormControl>
+              <Input type="time" v-bind="endTimeField" />
+            </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
       </div>
-      <Button type="submit">Submit</Button>
+
+      <FormField v-slot="{ componentField: performerField }" name="performer">
+        <FormItem>
+          <FormLabel>Performer</FormLabel>
+          <Select v-bind="performerField">
+            <FormControl>
+              <SelectTrigger>
+                <SelectValue placeholder="Select performer" />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="Unassigned">Unassigned</SelectItem>
+                <SelectItem
+                  v-for="user in availableUsers"
+                  :key="user?.id"
+                  :value="user?.id ?? 'none'"
+                >
+                  {{ user?.name ?? 'Error when fetching username' }}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <FormDescription>
+            You can only assign users with role Developer or DevOps
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+
+      <Button type="submit" class="w-full">
+        Create Task
+      </Button>
     </form>
   </div>
 </template>
