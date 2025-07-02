@@ -11,12 +11,10 @@ export type BaseTask = {
   priority: KanbanPriority;
   status: KanbanStatus;
   plannedEnd: string;
-  startTime: string;
-  endTime: string;
+  performer?: string;
 };
 
 export type NewTask = BaseTask & {
-  performer?: string;
   story: string;
 };
 
@@ -27,6 +25,8 @@ export type TaskRecord = BaseTask & {
   updated: string;
   collectionId: string;
   collectionName: string;
+  startTime?: string;
+  endTime?: string;
 };
 
 export type TaskRelations = {

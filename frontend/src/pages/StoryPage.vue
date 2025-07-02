@@ -21,19 +21,7 @@ const showCreateTaskPage = () => {
 };
 
 const handleTaskSelection = async (payload: TaskRecord) => {
-  appStore.openModal(
-    'task-details',
-    TaskForm,
-    `Task: ${payload.title}`,
-    {
-      task: payload,
-    },
-    false
-  );
-};
-
-const handleTaskEdit = async (payload: TaskRecord) => {
-  handleTaskSelection(payload);
+  console.log('Task selected:', payload);
 };
 
 const handleTaskDelete = async (payload: TaskRecord) => {
@@ -71,7 +59,7 @@ onUnmounted(async () => {
     <KanbanBoard
       :items="taskStore.tasks"
       @item-select="handleTaskSelection"
-      @item-edit="handleTaskEdit"
+      @item-edit="handleTaskSelection"
       @item-delete="handleTaskDelete"
     >
       <template #item-name="{ item }">{{ item.title }}</template>
