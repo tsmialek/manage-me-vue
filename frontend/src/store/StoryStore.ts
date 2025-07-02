@@ -56,7 +56,7 @@ export const useStoryStore = defineStore('story', () => {
     }
   };
 
-  const updateStory = async (id: string, story: any) => {
+  const updateStory = async (id: string, story: Partial<StoryRecord>) => {
     const result = await performAsyncOperation(
       async () => {
         return await StoryService.update(id, story);

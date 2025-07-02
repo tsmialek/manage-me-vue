@@ -71,7 +71,7 @@ export class BasePocketBaseService<Base, Record> {
     }
   }
 
-  async update(id: string, records: any) {
+  async update(id: string, records: Partial<Record>) {
     try {
       const updateResult = await this.pb
         .collection(this.collectionName)

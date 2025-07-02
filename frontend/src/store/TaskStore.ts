@@ -56,10 +56,10 @@ export const useTaskStore = defineStore('task', () => {
     }
   };
 
-  const updateTask = async (id: string, story: any) => {
+  const updateTask = async (id: string, task: Partial<TaskRecord>) => {
     const result = await performAsyncOperation(
       async () => {
-        return await TaskService.update(id, story);
+        return await TaskService.update(id, task);
       },
       loading,
       error

@@ -56,7 +56,7 @@ export const useProjectStore = defineStore('projects', () => {
     }
   };
 
-  const updateProject = async (id: string, project: any) => {
+  const updateProject = async (id: string, project: Partial<ProjectRecord>) => {
     const result = await performAsyncOperation(
       async () => {
         return await ProjectService.update(id, project);
