@@ -15,7 +15,7 @@ defineProps<{
         <span>{{ variant.toUpperCase() }}</span>
       </CardTitle>
     </CardHeader>
-    <CardContent class="px-4 pb-4 space-y-4">
+    <CardContent class="lg:px-4 lg:pb-4 space-y-4">
       <slot />
     </CardContent>
   </Card>

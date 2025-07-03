@@ -23,7 +23,7 @@ const groupedItems = computed(() => {
 </script>
 
 <template>
-  <div class="grid gap-4 lg:grid-cols-3 items-start p-2">
+  <div class="grid gap-4 items-start lg:grid-cols-3 lg:p-2">
     <KanbanCard v-for="status in KanbanStatus" :variant="status" :key="status">
       <KanbanListItem
         v-for="item in groupedItems[status]"

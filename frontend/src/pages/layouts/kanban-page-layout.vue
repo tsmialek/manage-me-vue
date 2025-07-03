@@ -39,8 +39,8 @@ const emit = defineEmits(['add']);
 
         <Separator v-if="separatorLabel" :label="separatorLabel"></Separator>
 
-        <CardContent>
-          <slot></slot>
+        <CardContent class="p-0">
+          <slot />
         </CardContent>
       </Card>
     </div>

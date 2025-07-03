@@ -19,7 +19,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { EditControls } from '@/components/ui/edit-controls';
-import { CalendarIcon, EditIcon, UserIcon, FlagIcon } from 'lucide-vue-next';
+import {
+  CalendarIcon,
+  EditIcon,
+  UserIcon,
+  FlagIcon,
+  CheckIcon,
+} from 'lucide-vue-next';
 import { DateUtils } from '@/lib/utils';
 
 interface Props {
