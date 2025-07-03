@@ -3,8 +3,6 @@ import { ref } from 'vue';
 
 import type { TaskRecord } from '@/types';
 import { useLocalStorage } from '@vueuse/core';
-import { performAsyncOperation } from '@/lib/utils';
-import { TaskService } from '@/services';
 import { useTaskStore } from '@/store';
 
 export const useActiveTaskStore = defineStore('active-task', () => {
@@ -21,8 +19,8 @@ export const useActiveTaskStore = defineStore('active-task', () => {
     }
   };
 
-  const setActiveTask = async (storyId: string) => {
-    activeTaskId.value = storyId;
+  const setActiveTask = async (taskId: string) => {
+    activeTaskId.value = taskId;
     await fetchActiveTask();
   };
 

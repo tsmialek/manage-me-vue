@@ -69,6 +69,7 @@ const onSubmit = handleSubmit(async formValues => {
       priority: formValues.priority,
       status: KanbanStatus.todo,
       plannedEnd: new Date(formValues.plannedEnd).toISOString(),
+      performer: null,
       story: activeStoryStore.activeStoryId,
     };
     await taskStore.addTask(newTask);

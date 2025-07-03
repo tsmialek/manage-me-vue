@@ -10,7 +10,7 @@ import { EditControls } from '@/components/ui/edit-controls';
 interface Props {
   task: TaskRecord;
   editingField: string | null;
-  tempTitle: string;
+  tempTitle?: string;
 }
 
 defineProps<Props>();

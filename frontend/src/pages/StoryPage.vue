@@ -22,7 +22,7 @@ const activeStoryStore = useActiveStoryStore();
 const appStore = useAppStore();
 const taskStore = useTaskStore();
 const activeTaskStore = useActiveTaskStore();
-const activeProjectStore = useActiveProjectStore(); // Assuming this is the correct store for active project
+const activeProjectStore = useActiveProjectStore();
 const route = useRoute();
 
 const showCreateTaskPage = () => {

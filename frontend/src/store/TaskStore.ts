@@ -5,12 +5,15 @@ import type { NewTask, TaskRecord } from '@/types';
 import { performAsyncOperation } from '@/lib/utils';
 import { useToast } from '@/components/ui/toast';
 import { TaskService } from '@/services';
+import { useActiveTaskStore } from '@/store';
 
 export const useTaskStore = defineStore('task', () => {
   const tasks = ref<TaskRecord[]>([]);
   const error = ref(null);
   const loading = ref(false);
   const { toast } = useToast();
+
+  const activeTaskStore = useActiveTaskStore();
 
   const fetchTasksForStory = async (storyId: string) => {
     if (!storyId) return;
@@ -71,6 +74,21 @@ export const useTaskStore = defineStore('task', () => {
     }
   };
 
+  const updateTask = async (id: string, task: Partial<TaskRecord>) => {
+    const result = await performAsyncOperation(
+      async () => {
+        return await TaskService.update(id, task);
+      },
+      loading,
+      error
+    );
+    if (result) {
+      toast({
+        title: `Task ${result.title} updated successfully`,
+      });
+    }
+  };
+
   const getByStatus = computed(() => {
     const result: Record<string, TaskRecord[]> = {
       todo: [],
@@ -101,6 +119,12 @@ export const useTaskStore = defineStore('task', () => {
         if (index > -1 && updatedTask) {
           tasks.value[index] = updatedTask;
         }
+
+        if (record.id === activeTaskStore.activeTaskId) {
+          console.log('active task updated');
+          activeTaskStore.setActiveTask(record.id);
+        }
+
         break;
       case 'delete':
         tasks.value = tasks.value.filter(s => s.id !== record.id);
@@ -128,6 +152,7 @@ export const useTaskStore = defineStore('task', () => {
     getTask,
     addTask,
     deleteTask,
+    updateTask,
     initializeRealtimeUpdates,
     unsubscribeFromRealtimeUpdates,
   };

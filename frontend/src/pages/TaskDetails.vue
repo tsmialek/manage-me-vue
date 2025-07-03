@@ -4,8 +4,16 @@ import { onMounted, onUnmounted, watch, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useActiveTaskStore, useTaskStore } from '@/store';
-import type { KanbanPriority, KanbanStatus } from '@/types';
+import {
+  KanbanPriority,
+  KanbanStatus,
+  type TaskField,
+  type TaskRecord,
+} from '@/types';
+import { useTaskBusinessLogic } from '@/composables/useTaskBusinessLogic';
+import { toast } from '@/components/ui/toast';
 
+import { Toaster } from '@/components/ui/toast';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -26,14 +34,18 @@ import {
   TaskAdditionalInfoCard,
 } from '@/components/tasks';
 
+import { AVAILABLE_PERFORMER_ROLES } from '@/components/tasks';
+
 const activeTaskStore = useActiveTaskStore();
 const taskStore = useTaskStore();
 const route = useRoute();
 
+const { updateTaskWithLogic } = useTaskBusinessLogic();
+
 const editingField = ref<string | null>(null);
 const isDrawerOpen = ref(false);
 
-const tempValues = ref({
+const tempValues = ref<Partial<TaskRecord>>({
   title: '',
   description: '',
   performer: '',
@@ -49,6 +61,7 @@ watch(
   async newId => {
     activeTaskStore.clearActiveTask();
     newId = Array.isArray(newId) ? newId[0] : newId;
+    if (!newId) return;
     await activeTaskStore.setActiveTask(newId);
   },
   { immediate: true }
@@ -80,16 +93,43 @@ const cancelEdit = () => {
   editingField.value = null;
 };
 
-const saveEdit = async (field: string) => {
-  // TODO: Implement actual update logic
-  console.log(
-    `Saving ${field}:`,
-    tempValues.value[field as keyof typeof tempValues.value]
-  );
-  editingField.value = null;
+const saveEdit = async (field: TaskField) => {
+  if (!task.value) {
+    console.error('No task available');
+    return;
+  }
+
+  const fieldValue = tempValues.value[field as keyof typeof tempValues.value];
+
+  if (task.value[field] === fieldValue) {
+    cancelEdit();
+    return;
+  }
+
+  try {
+    const updates: Partial<TaskRecord> = { [field]: tempValues.value[field] };
+
+    await updateTaskWithLogic(task.value.id, updates);
+
+    toast({
+      title: 'Task updated',
+      description: `Successfully updated ${field}`,
+    });
+
+    editingField.value = null;
+  } catch (error) {
+    cancelEdit();
+    console.error('Error updating task:', error);
+    toast({
+      title: 'Update failed',
+      description:
+        error instanceof Error ? error.message : 'Unknown error occurred',
+      variant: 'destructive',
+    });
+  }
 };
 
-const updateTempValue = (field: string, value: string) => {
+const updateTempValue = (field: TaskField, value: string) => {
   (tempValues.value as any)[field] = value;
 };
 </script>
@@ -103,7 +143,6 @@ const updateTempValue = (field: string, value: string) => {
           {{ task?.title || 'Loading...' }}
         </h1>
       </div>
-
       <div class="md:hidden">
         <Drawer v-model:open="isDrawerOpen">
           <DrawerTrigger as-child>
@@ -122,6 +161,7 @@ const updateTempValue = (field: string, value: string) => {
                 :task="task"
                 :editing-field="editingField"
                 :temp-values="tempValues"
+                :available-performer-roles="AVAILABLE_PERFORMER_ROLES"
                 @start-edit="startEdit"
                 @save-edit="saveEdit"
                 @cancel-edit="cancelEdit"
@@ -173,6 +213,7 @@ const updateTempValue = (field: string, value: string) => {
             :task="task"
             :editing-field="editingField"
             :temp-values="tempValues"
+            :available-performer-roles="AVAILABLE_PERFORMER_ROLES"
             @start-edit="startEdit"
             @save-edit="saveEdit"
             @cancel-edit="cancelEdit"
@@ -181,6 +222,7 @@ const updateTempValue = (field: string, value: string) => {
         </div>
       </div>
     </div>
+    <Toaster />
   </div>
 </template>
 

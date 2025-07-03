@@ -2,7 +2,7 @@
 import {
   type TaskRecord,
   type TaskFieldsEmits,
-  type TaskField,
+  type UserRole,
   KanbanPriority,
   KanbanStatus,
 } from '@/types';
@@ -27,15 +27,25 @@ import {
   CheckIcon,
 } from 'lucide-vue-next';
 import { DateUtils } from '@/lib/utils';
+import { useUserStore } from '@/store';
+import { computed } from 'vue';
 
 interface Props {
   task: TaskRecord;
   editingField: string | null;
   tempValues: Partial<TaskRecord>;
+  availablePerformerRoles: UserRole[];
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 const emit = defineEmits<TaskFieldsEmits>();
+const userStore = useUserStore();
+
+const performers = computed(() =>
+  props.availablePerformerRoles.flatMap(
+    (role: UserRole) => userStore.getByRole[role]
+  )
+);
 </script>
 
 <template>
@@ -59,11 +69,24 @@ const emit = defineEmits<TaskFieldsEmits>();
       </CardHeader>
       <CardContent>
         <div v-if="editingField === 'performer'" class="space-y-2">
-          <Input
+          <Select
             :model-value="tempValues.performer"
-            @update:model-value="(value) => emit('update-temp-value', 'performer', value as TaskField)"
-            placeholder="Enter performer name"
-          />
+            @update:model-value="(value) => emit('update-temp-value', 'performer', value as string)"
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Unassigned" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="unassigned">Unassigned</SelectItem>
+              <SelectItem
+                v-for="performer in performers"
+                :key="performer?.id"
+                :value="performer?.id || ''"
+              >
+                {{ performer?.name || 'Unknown' }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
           <EditControls
             @save="emit('save-edit', 'performer')"
             @cancel="emit('cancel-edit')"
@@ -192,7 +215,7 @@ const emit = defineEmits<TaskFieldsEmits>();
         <div v-if="editingField === 'plannedEnd'" class="space-y-2">
           <Input
             type="datetime-local"
-            :model-value="tempValues.plannedEnd"
+            :model-value="tempValues.plannedEnd ?? ''"
             @update:model-value="(value) => emit('update-temp-value', 'plannedEnd', value as string)"
           />
           <EditControls
@@ -200,7 +223,7 @@ const emit = defineEmits<TaskFieldsEmits>();
             @cancel="emit('cancel-edit')"
           />
         </div>
-        <p v-else>{{ DateUtils.format(task?.plannedEnd) }}</p>
+        <p v-else>{{ DateUtils.format(task?.plannedEnd ?? '') }}</p>
       </CardContent>
     </Card>
   </div>
