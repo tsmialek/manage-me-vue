@@ -1,0 +1,22 @@
+{
+  "user": {
+    "email": "tomek@manage-me.com",
+    "password": "tomeksmialek"
+  },
+  "project": {
+    "name": "Test Project E2E",
+    "description": "This is a test project created by Cypress E2E tests",
+    "priority": "High"
+  },
+  "story": {
+    "title": "Test Story E2E",
+    "description": "This is a test story created by Cypress E2E tests",
+    "priority": "Medium"
+  },
+  "task": {
+    "title": "Test Task E2E",
+    "description": "This is a test task created by Cypress E2E tests",
+    "priority": "Low",
+    "estimatedHours": "3"
+  }
+}

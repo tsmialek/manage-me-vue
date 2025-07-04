@@ -40,7 +40,6 @@ const activeStoryStore = useActiveStoryStore();
 
 const availableUsers = ref<UserRecord[]>([]);
 
-// Priority options array
 const priorityOptions = [
   { value: KanbanPriority.low, label: 'Low' },
   { value: KanbanPriority.medium, label: 'Medium' },
@@ -53,7 +52,7 @@ const formSchema = toTypedSchema(
     description: z.string(),
     priority: z.nativeEnum(KanbanPriority).default(KanbanPriority.low),
     status: z.nativeEnum(KanbanStatus).default(KanbanStatus.todo),
-    plannedEnd: z.string(),
+    plannedEnd: z.string().optional(),
   })
 );
 
@@ -68,7 +67,9 @@ const onSubmit = handleSubmit(async formValues => {
       description: formValues.description,
       priority: formValues.priority,
       status: KanbanStatus.todo,
-      plannedEnd: new Date(formValues.plannedEnd).toISOString(),
+      plannedEnd: formValues.plannedEnd
+        ? new Date(formValues.plannedEnd).toISOString()
+        : null,
       performer: null,
       story: activeStoryStore.activeStoryId,
     };
@@ -178,7 +179,7 @@ onMounted(async () => {
       </FormItem>
     </FormField>
 
-    <Button type="submit" class="w-full">Create Task</Button>
+    <Button type="submit" class="w-full">Submit</Button>
   </form>
 </template>
 

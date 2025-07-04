@@ -47,9 +47,9 @@ watch(
     activeStoryStore.clearActiveStory();
     newId = Array.isArray(newId) ? newId[0] : newId;
     await activeStoryStore.setActiveStory(newId);
-    if (activeStoryStore.activeStory?.expand?.project.id) {
+    if (activeStoryStore.activeStory?.expand?.project?.id) {
       await activeProjectStore.setActiveProject(
-        activeStoryStore.activeStory?.expand?.project.id
+        activeStoryStore.activeStory?.expand?.project?.id
       );
     }
   },

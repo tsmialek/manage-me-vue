@@ -27,7 +27,12 @@ const { showOn = 'body' } = defineProps<{
             <h2 v-if="appStore.modalTitle" class="text-xl">
               {{ appStore.modalTitle }}
             </h2>
-            <Button size="icon" @click="appStore.closeModal()" class="">
+            <Button
+              id="modal-close-button"
+              size="icon"
+              @click="appStore.closeModal()"
+              class=""
+            >
               <X />
             </Button>
           </div>
