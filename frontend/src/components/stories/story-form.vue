@@ -39,12 +39,10 @@ const schema = z.object({
 
 async function onSubmit(values: Omit<NewStory, 'owner' | 'project'>) {
   if (story) {
-    // update
     await storyStore.updateStory(story.id, {
       ...values,
     });
   } else {
-    // create
     const newStory = {
       ...values,
       owner: authStore.currentUserId,

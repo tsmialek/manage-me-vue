@@ -29,13 +29,10 @@ const schema = z.object({
     .max(200, 'Description must not be longer than 200 characters'),
 });
 
-// TODO: add assigning project to user
 async function onSubmit(values: Omit<BaseProject, 'user'>) {
   if (project) {
-    // update
     await projectStore.updateProject(project.id, { ...values });
   } else {
-    // create
     const newProject = {
       ...values,
       user: [authStore.currentUserId],

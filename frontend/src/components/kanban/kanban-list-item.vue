@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends KanbanItem">
+<script setup lang="ts">
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -6,8 +6,6 @@ import {
   DropdownMenuContent,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-
-import type { KanbanItem } from '@/types';
 
 const emit = defineEmits(['edit', 'delete', 'select']);
 </script>

@@ -1,10 +1,11 @@
-import type {
-  UserRecord,
-  StoryRecord,
-  KanbanPriority,
-  KanbanStatus,
-  KanbanTransition,
+import {
+  type UserRecord,
+  type StoryRecord,
+  type KanbanPriority,
+  type KanbanTransition,
 } from '@/types';
+
+import { KanbanStatus } from '@/types/kanban';
 
 export type BaseTask = {
   title: string;
@@ -55,21 +56,21 @@ export type PerformerAssignmentForbiddenTransition =
   typeof ForbidAssignToCompletedTaskTransition;
 
 export const AssignPerformerTransition: KanbanTransition<TaskRecord> = {
-  from: 'todo' as KanbanStatus,
-  to: 'doing' as KanbanStatus,
+  from: KanbanStatus.todo,
+  to: KanbanStatus.doing,
   conditions: (task, updates) =>
-    task.performer === null &&
+    !task.performer &&
     !!updates.performer &&
     updates.performer !== 'unassigned',
   effects: (_task, updates) => ({
     ...updates,
-    status: 'doing' as KanbanStatus,
+    status: KanbanStatus.doing,
     startTime: new Date().toISOString(),
   }),
 };
 
 export const ChangeFromTodoWithoutPerformer: KanbanTransition<TaskRecord> = {
-  from: 'todo' as KanbanStatus,
+  from: KanbanStatus.todo,
   to: '*',
   conditions: (task, updates) =>
     task.performer === null && updates.performer === undefined,
@@ -86,8 +87,8 @@ export const ChangeTaskFieldsNotRelatedToStatus: KanbanTransition<TaskRecord> =
   };
 
 export const ChangeFromDoneToDoing: KanbanTransition<TaskRecord> = {
-  from: 'done' as KanbanStatus,
-  to: 'doing' as KanbanStatus,
+  from: KanbanStatus.done,
+  to: KanbanStatus.doing,
   effects: (_task, updates) => ({
     ...updates,
     endTime: null,
@@ -95,21 +96,21 @@ export const ChangeFromDoneToDoing: KanbanTransition<TaskRecord> = {
 };
 
 export const UnassignPerformerTransition: KanbanTransition<TaskRecord> = {
-  from: 'doing' as KanbanStatus,
-  to: 'todo' as KanbanStatus,
+  from: KanbanStatus.doing,
+  to: KanbanStatus.todo,
   conditions: (_task, updates) =>
     !!updates.performer || updates.performer === 'unassigned',
   effects: (_task, updates) => ({
     ...updates,
     performer: null,
-    status: 'todo' as KanbanStatus,
+    status: KanbanStatus.todo,
     startTime: null,
   }),
 };
 
 export const ResetToTodoTransition: KanbanTransition<TaskRecord> = {
   from: '*',
-  to: 'todo' as KanbanStatus,
+  to: KanbanStatus.todo,
   conditions: (_task, updates) => updates.status === 'todo',
   effects: (_task, updates) => ({
     ...updates,
@@ -121,7 +122,7 @@ export const ResetToTodoTransition: KanbanTransition<TaskRecord> = {
 
 export const CompleteTaskTransition: KanbanTransition<TaskRecord> = {
   from: '*',
-  to: 'done' as KanbanStatus,
+  to: KanbanStatus.done,
   conditions: (task, updates) => {
     if (updates.status === 'done') {
       if (task.status === 'todo' && !task.expand?.performer) {
@@ -139,8 +140,8 @@ export const CompleteTaskTransition: KanbanTransition<TaskRecord> = {
 
 export const ForbidAssignToCompletedTaskTransition: KanbanTransition<TaskRecord> =
   {
-    from: 'done' as KanbanStatus,
-    to: 'done' as KanbanStatus,
+    from: KanbanStatus.done,
+    to: KanbanStatus.done,
     conditions: (_task, updates) =>
       !!updates.performer && updates.performer !== 'unassigned',
     validationMessage: 'Cannot assign performer to completed task',
